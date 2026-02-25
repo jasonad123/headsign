@@ -583,6 +583,15 @@
 							>{$_('config.routeDisplay.showRouteLongNameHelpText')}</small
 						>
 					</div>
+
+					<div class="toggle-container">
+						<Toggle bind:checked={$config.showCrowding}>
+							{#snippet label()}
+								<span>{$_('config.crowding.showCrowding')}</span>
+							{/snippet}
+						</Toggle>
+						<small class="toggle-help-text">{$_('config.crowding.showCrowdingHelpText')}</small>
+					</div>
 				</SolidSection>
 
 				<CollapsibleSection

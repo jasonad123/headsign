@@ -3,12 +3,13 @@
 	import { _ } from 'svelte-i18n';
 	import { browser } from '$app/environment';
 	import { config } from '$lib/stores/config';
-	import type { Route, ScheduleItem, Itinerary } from '$lib/services/nearby';
+	import type { Route, ScheduleItem, Itinerary, CrowdingMap } from '$lib/services/nearby';
+	import CrowdingIcon from './CrowdingIcon.svelte';
 	import { parseAlertContent, extractImageId } from '$lib/services/alerts';
 	import { getMinutesUntil } from '$lib/utils/timeUtils';
 	import { shouldShowDeparture } from '$lib/utils/departureFilters';
 
-	let { route, showLongName = false }: { route: Route; showLongName?: boolean } = $props();
+	let { route, showLongName = false, crowdingMap }: { route: Route; showLongName?: boolean; crowdingMap?: CrowdingMap } = $props();
 
 	let useBlackText = $derived(route.route_text_color === '000000');
 	let cellStyle = $derived(`background: #${route.route_color}; color: #${route.route_text_color}`);
@@ -1055,6 +1056,9 @@
 										<i class="realtime"></i>
 									{/if}
 									<small class:last={item.is_last}>{item.is_last ? 'last' : 'min'}</small>
+									{#if crowdingMap && item.rt_trip_id}
+										<CrowdingIcon level={crowdingMap.get(item.rt_trip_id)} />
+									{/if}
 								</h4>
 							{/each}
 							{#each Array(Math.max(0, 3 - (dir.schedule_items?.filter(shouldShowDeparture).length || 0))) as _}

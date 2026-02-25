@@ -54,8 +54,12 @@ export interface ScheduleItem {
 	is_real_time?: boolean;
 	is_cancelled?: boolean;
 	trip_search_key?: string;
+	rt_trip_id?: string;
 	is_last?: boolean;
 }
+
+export type OccupancyStatus = 1 | 2 | 3;
+export type CrowdingMap = Map<string, OccupancyStatus>;
 
 export interface InformedEntity {
 	global_route_id?: string;
