@@ -391,13 +391,13 @@
 								></iconify-icon>
 							{/if}
 							{#each row.departures as item, itemIdx}
+								{#if itemIdx === 0 && crowdingMap && item.rt_trip_id}
+									<CrowdingIcon level={crowdingMap.get(item.rt_trip_id)} />
+								{/if}
 								<span class="time-badge" class:cancelled={item.is_cancelled}>
 									{getMinutesUntil(item.departure_time)}<span class="time-suffix">min</span
 									>{#if item.is_real_time}<i class="realtime"></i>{/if}{#if item.is_last}*{/if}
 								</span>
-								{#if itemIdx === 0 && crowdingMap && item.rt_trip_id}
-									<CrowdingIcon level={crowdingMap.get(item.rt_trip_id)} />
-								{/if}
 							{/each}
 						</div>
 						{#if onHideRoute}
@@ -695,6 +695,10 @@
 		align-items: center;
 		gap: 0.65em;
 		flex-shrink: 0;
+	}
+
+	.row-times :global(.crowding-badge) {
+		font-size: 0.7em;
 	}
 
 	.time-badge {

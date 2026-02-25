@@ -1057,7 +1057,9 @@
 									{/if}
 									<small class:last={item.is_last}>{item.is_last ? 'last' : 'min'}</small>
 									{#if crowdingMap && item.rt_trip_id}
-										<CrowdingIcon level={crowdingMap.get(item.rt_trip_id)} />
+										<span class="crowding-wrap">
+											<CrowdingIcon level={crowdingMap.get(item.rt_trip_id)} />
+										</span>
 									{/if}
 								</h4>
 							{/each}
@@ -1499,6 +1501,17 @@
 		padding: 0.4em 0;
 		text-align: center;
 		box-sizing: border-box;
+	}
+
+	.route .time h4 :global(.crowding-badge) {
+		font-size: 0.5em;
+	}
+
+	.route .time h4 .crowding-wrap {
+		display: block;
+		text-align: center;
+		margin-top: -0.2em;
+		margin-bottom: -0.1em;
 	}
 
 	.route .time h4 span.cancelled {

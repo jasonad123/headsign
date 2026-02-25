@@ -737,20 +737,25 @@
 		}
 	});
 
-	// Manage crowding polling based on config toggle and route data
+	// Start/stop crowding polling when toggle or editing state changes
 	$effect(() => {
 		const enabled = $config.showCrowding;
-		const hasRoutes = routes.length > 0;
+		const editing = $config.isEditing;
 
-		if (enabled && hasRoutes && !$config.isEditing) {
-			updateCrowdingRoutes(routes);
-			// Start polling (startCrowdingPolling is safe to call multiple times -- it stops first)
-			startCrowdingPolling(routes);
+		if (enabled && !editing) {
+			startCrowdingPolling(untrack(() => routes));
 		} else {
 			stopCrowdingPolling();
 			if (!enabled) {
 				crowdingStore.set(new Map());
 			}
+		}
+	});
+
+	// Pass fresh route data to crowding service without restarting the poll
+	$effect(() => {
+		if (routes.length > 0 && $config.showCrowding) {
+			updateCrowdingRoutes(routes);
 		}
 	});
 
