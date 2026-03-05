@@ -101,7 +101,8 @@ exports.getPlacemarks = async function (req, res) {
 	const fetchPromise = (async () => {
 		try {
 			const response = await fetch(
-				`https://external.transitapp.com/v4/public/map_layers/placemarks?lat=${lat}&lon=${lon}&distance=${searchDistance}`,
+				// `https://external.transitapp.com/v4/public/map_layers/placemarks?lat=${lat}&lon=${lon}&distance=${searchDistance}`,
+				`https://external.transitapp.com/map_layers/placemarks?lat=${lat}&lon=${lon}&distance=${searchDistance}`,
 				{
 					headers: {
 						Accept: 'application/json',
