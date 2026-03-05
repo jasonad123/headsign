@@ -193,6 +193,11 @@
 		"minimumWidth": "Minimum width: 640 pixels",
 		"developerMessage": "Developers: use toggleWidthCheck() in the console to disable this message"
 	},
+	"micromobility": {
+		"stations": "{count, plural, one {1 station} other {{count} stations}}",
+		"nearby": "nearby",
+		"show": "Show nearby bikes & scooters"
+	},
 	"errors": {
 		"rateLimit": "Checking for updates. Retrying in {seconds} seconds...",
 		"auth": "Can't connect to the Transit API.",

@@ -2,7 +2,9 @@
 	import { onDestroy } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import RouteIcon from './RouteIcon.svelte';
+	import MicromobilityCard from './MicromobilityCard.svelte';
 	import type { Route, Itinerary, ScheduleItem } from '$lib/services/nearby';
+	import type { NetworkStationGroup, NetworkFloatingGroup } from '$lib/services/placemarks';
 	import { getMinutesUntil } from '$lib/utils/timeUtils';
 	import { shouldShowDeparture } from '$lib/utils/departureFilters';
 	import { parseAlertContent, extractImageId } from '$lib/services/alerts';
@@ -20,6 +22,8 @@
 		stopOrder = [],
 		showLongName = false,
 		showQRCode = false,
+		stationGroups = [],
+		floatingGroups = [],
 		onMoveStop,
 		onMoveStopToTop,
 		onHideRoute,
@@ -29,11 +33,15 @@
 		stopOrder?: string[];
 		showLongName?: boolean;
 		showQRCode?: boolean;
+		stationGroups?: NetworkStationGroup[];
+		floatingGroups?: NetworkFloatingGroup[];
 		onMoveStop?: (stopId: string, direction: 'up' | 'down') => void;
 		onMoveStopToTop?: (stopId: string) => void;
 		onHideRoute?: (routeId: string) => void;
 		onHideStop?: (stopId: string) => void;
 	} = $props();
+
+	let hasMicromobility = $derived(stationGroups.length > 0 || floatingGroups.length > 0);
 
 	interface DepartureRow {
 		route: Route;
@@ -392,6 +400,21 @@
 			</div>
 		{/each}
 	</div>
+
+	{#if hasMicromobility}
+		<div class="micromobility-section">
+			{#each stationGroups as group (group.networkId)}
+				<div class="micro-panel">
+					<MicromobilityCard item={group} />
+				</div>
+			{/each}
+			{#each floatingGroups as group (group.networkId)}
+				<div class="micro-panel">
+					<MicromobilityCard item={group} />
+				</div>
+			{/each}
+		</div>
+	{/if}
 
 	<!-- Pinned bottom bar (alerts + optional QR slot) -->
 	{#if consolidatedAlerts.length > 0 || showQRCode}
@@ -930,5 +953,23 @@
 		display: inline-block;
 		margin: 0 0.2em;
 		vertical-align: middle;
+	}
+
+	.micromobility-section {
+		display: flex;
+		gap: 0.5em;
+		padding: 0.3em 0.5em;
+		flex-shrink: 0;
+		overflow-x: auto;
+	}
+
+	.micro-panel {
+		min-width: 200px;
+		max-width: 300px;
+		flex-shrink: 0;
+		border-radius: 0.4em;
+		overflow: hidden;
+		background: var(--bg-primary, #fff);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 	}
 </style>

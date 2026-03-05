@@ -178,6 +178,11 @@
 		"minimumWidth": "Ancho minimo: 640 pixeles",
 		"developerMessage": "Programadores: usen toggleWidthCheck() en la consola para desactivar este mensaje."
 	},
+	"micromobility": {
+		"stations": "{count, plural, one {1 estacion} other {{count} estaciones}}",
+		"nearby": "cerca",
+		"show": "Mostrar bicicletas y patinetes cercanos"
+	},
 	"errors": {
 		"rateLimit": "Buscando actualizaciones. Reintentando en {seconds} segundos...",
 		"auth": "No se puede conectar al API de Transit.",

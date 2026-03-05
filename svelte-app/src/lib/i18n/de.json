@@ -178,6 +178,11 @@
 		"minimumWidth": "Mindestbreite: 640 Pixel",
 		"developerMessage": "Webentwickler*innen: Verwenden Sie toggleWidthCheck() in der Konsole, um diese Meldung zu deaktivieren."
 	},
+	"micromobility": {
+		"stations": "{count, plural, one {1 Station} other {{count} Stationen}}",
+		"nearby": "in der Nahe",
+		"show": "Fahrrader und Roller in der Nahe anzeigen"
+	},
 	"errors": {
 		"rateLimit": "Überprüfung auf Updates. Erneuter Versuch in {seconds} Sekunden...",
 		"auth": "Verbindung zum Transit-API nicht möglich.",

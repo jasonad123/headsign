@@ -6,6 +6,13 @@
 	import { config } from '$lib/stores/config';
 	import { findNearbyRoutes } from '$lib/services/nearby';
 	import {
+		fetchPlacemarks,
+		groupByNetwork,
+		type NetworkStationGroup,
+		type NetworkFloatingGroup
+	} from '$lib/services/placemarks';
+	import MicromobilityCard from '$lib/components/MicromobilityCard.svelte';
+	import {
 		crowdingStore,
 		refreshCrowding,
 		startCrowdingPolling,
@@ -35,6 +42,10 @@
 	let errorMessage = $state<string | null>(null);
 	let retryCountdown = $state<number | null>(null);
 	let errorType = $state<'rate-limit' | 'auth' | 'timeout' | 'backend' | 'generic' | null>(null);
+
+	// Micromobility state
+	let stationGroups = $state<NetworkStationGroup[]>([]);
+	let floatingGroups = $state<NetworkFloatingGroup[]>([]);
 
 	// Screen width check
 	let windowWidth = $state(0);
@@ -209,7 +220,8 @@
 
 					return `${r.global_route_id}:${r.itineraries?.length || 0}:${r.alerts?.length || 0}:${itineraryTextLen}:${alertTextLen}:${splitCount}`;
 				})
-				.join('|')
+				.join('|') +
+			`-${stationGroups.length}s${floatingGroups.length}f`
 		);
 	}
 
@@ -282,8 +294,35 @@
 			const currentConfig = $config;
 			if (!currentConfig.latLng) return;
 
-			const fetchedRoutes = await findNearbyRoutes(currentConfig.latLng, currentConfig.maxDistance);
+			const promises: [
+				Promise<Route[]>,
+				Promise<import('$lib/services/placemarks').Placemark[]> | null
+			] = [
+				findNearbyRoutes(currentConfig.latLng, currentConfig.maxDistance),
+				currentConfig.showMicromobility
+					? fetchPlacemarks(currentConfig.latLng.latitude, currentConfig.latLng.longitude, currentConfig.maxDistance)
+					: null
+			];
+
+			const [routeResult, placemarksResult] = await Promise.allSettled(
+				promises.filter((p): p is NonNullable<typeof p> => p !== null)
+			);
+
+			if (routeResult.status === 'rejected') {
+				throw routeResult.reason;
+			}
+			const fetchedRoutes = routeResult.value as Route[];
 			allRoutes = fetchedRoutes;
+
+			// Process placemarks (fails silently)
+			if (currentConfig.showMicromobility && placemarksResult && placemarksResult.status === 'fulfilled') {
+				const grouped = groupByNetwork(placemarksResult.value as import('$lib/services/placemarks').Placemark[]);
+				stationGroups = grouped.stationGroups;
+				floatingGroups = grouped.floatingGroups;
+			} else if (!currentConfig.showMicromobility) {
+				stationGroups = [];
+				floatingGroups = [];
+			}
 
 			const hiddenStops = currentConfig.hiddenStops || [];
 			const hiddenAgencies = currentConfig.hiddenAgencies || [];
@@ -1120,6 +1159,8 @@
 					stopOrder={$config.stopOrder || []}
 					showLongName={$config.showRouteLongName}
 					showQRCode={$config.showQRCode && !$config.isEditing}
+					stationGroups={$config.showMicromobility ? stationGroups : []}
+					floatingGroups={$config.showMicromobility ? floatingGroups : []}
 					onMoveStop={moveStop}
 					onMoveStopToTop={moveStopToTop}
 					onHideRoute={toggleRouteHidden}
@@ -1197,6 +1238,18 @@
 						</div>
 					</div>
 				{/each}
+				{#if $config.showMicromobility}
+					{#each stationGroups as group (group.networkId)}
+						<div class="route-wrapper" transition:fade={{ duration: 300 }}>
+							<MicromobilityCard item={group} />
+						</div>
+					{/each}
+					{#each floatingGroups as group (group.networkId)}
+						<div class="route-wrapper" transition:fade={{ duration: 300 }}>
+							<MicromobilityCard item={group} />
+						</div>
+					{/each}
+				{/if}
 			</section>
 		{/if}
 	</div>
