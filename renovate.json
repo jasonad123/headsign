@@ -16,6 +16,12 @@
       "matchPackageNames": ["node"],
       "matchManagers": ["dockerfile", "github-actions"],
       "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Do not pin digests for own project images",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/jasonad123/headsign"],
+      "pinDigests": false
     }
   ]
 }
