@@ -24,7 +24,7 @@
 	"engines": {
 		"node": ">=24.0.0"
 	},
-	"packageManager": "pnpm@10.33.4",
+	"packageManager": "pnpm@10.34.1",
 	"private": true,
 	"devDependencies": {
 		"@playwright/test": "^1.59.1",
