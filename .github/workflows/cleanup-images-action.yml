@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Delete old beta prerelease images
-        uses: dataaxiom/ghcr-cleanup-action@f092b48ba3b604b2a83690dc4b2bbb3392e1045f # v1.2.1
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           dry-run: ${{ inputs.dry_run == true }}
           keep-n-tagged: ${{ env.KEEP_PRERELEASE_COUNT }}
@@ -47,7 +47,7 @@ jobs:
 
     steps:
       - name: Delete old alpha prerelease images
-        uses: dataaxiom/ghcr-cleanup-action@f092b48ba3b604b2a83690dc4b2bbb3392e1045f # v1.2.1
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           dry-run: ${{ inputs.dry_run == true }}
           keep-n-tagged: ${{ env.KEEP_PRERELEASE_COUNT }}
@@ -67,7 +67,7 @@ jobs:
 
     steps:
       - name: Delete old release candidate images
-        uses: dataaxiom/ghcr-cleanup-action@f092b48ba3b604b2a83690dc4b2bbb3392e1045f # v1.2.1
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           dry-run: ${{ inputs.dry_run == true }}
           keep-n-tagged: ${{ env.KEEP_PRERELEASE_COUNT }}
@@ -87,7 +87,7 @@ jobs:
 
     steps:
       - name: Delete branch-test images
-        uses: dataaxiom/ghcr-cleanup-action@f092b48ba3b604b2a83690dc4b2bbb3392e1045f # v1.2.1
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           dry-run: ${{ inputs.dry_run == true }}
           keep-n-tagged: 0
@@ -107,7 +107,7 @@ jobs:
 
     steps:
       - name: Validate multi-architecture images before orphan cleanup
-        uses: dataaxiom/ghcr-cleanup-action@f092b48ba3b604b2a83690dc4b2bbb3392e1045f # v1.2.1
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           validate: true
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -122,7 +122,7 @@ jobs:
 
     steps:
       - name: Delete orphaned images
-        uses: dataaxiom/ghcr-cleanup-action@f092b48ba3b604b2a83690dc4b2bbb3392e1045f # v1.2.1
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           dry-run: ${{ inputs.dry_run == true }}
           delete-orphaned-images: true
@@ -131,7 +131,7 @@ jobs:
           owner: ${{ github.repository_owner }}
           validate: true
       - name: Delete ghost images
-        uses: dataaxiom/ghcr-cleanup-action@f092b48ba3b604b2a83690dc4b2bbb3392e1045f # v1.2.1
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           dry-run: ${{ inputs.dry_run == true }}
           delete-ghost-images: true
