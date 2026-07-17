@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy, untrack } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { _ } from 'svelte-i18n';
+	import { t } from '$lib/i18n';
 	import { browser } from '$app/environment';
 	import { config } from '$lib/stores/config';
 	import { findNearbyRoutes } from '$lib/services/nearby';
@@ -48,7 +48,7 @@
 	let validationSuccess = $state<boolean | null>(null);
 
 	// App version state
-	let appVersion = $state<string>('1.5.4'); // Fallback version
+	let appVersion = $state<string>('1.5.5'); // Fallback version
 
 	// Auto-scale state
 	let contentScale = $state(1.0);
@@ -99,7 +99,7 @@
 		const estimatedWidth = windowWidth / $config.columns;
 		if (estimatedWidth < minColumnWidth) {
 			const nomColWidth = Math.round(estimatedWidth);
-			return $_('config.columns.columnWarning', { values: { nomColWidth } });
+			return t('config.columns.columnWarning', { nomColWidth });
 		}
 		return null;
 	});
@@ -348,7 +348,7 @@
 			if (error.isRateLimit) {
 				errorType = 'rate-limit';
 				const retryAfter = error.retryAfter || 60;
-				errorMessage = $_('errors.rateLimit', { values: { seconds: retryAfter } });
+				errorMessage = t('errors.rateLimit', { seconds: retryAfter });
 				retryCountdown = retryAfter;
 
 				// Increase polling interval on rate limit
@@ -358,7 +358,7 @@
 				countdownIntervalId = setInterval(() => {
 					if (retryCountdown !== null && retryCountdown > 0) {
 						retryCountdown--;
-						errorMessage = $_('errors.rateLimit', { values: { seconds: retryCountdown } });
+						errorMessage = t('errors.rateLimit', { seconds: retryCountdown });
 					} else {
 						if (countdownIntervalId) {
 							clearInterval(countdownIntervalId);
@@ -374,14 +374,14 @@
 			// Handle authentication errors - don't retry automatically
 			else if (error.isAuthError) {
 				errorType = 'auth';
-				errorMessage = $_('errors.auth');
+				errorMessage = t('errors.auth');
 				// Don't increase polling interval or auto-retry for auth errors
 				// Manual intervention required
 			}
 			// Handle timeout errors
 			else if (error.isTimeout) {
 				errorType = 'timeout';
-				errorMessage = $_('errors.timeout');
+				errorMessage = t('errors.timeout');
 				increasePollingInterval();
 
 				errorRetryTimeoutId = setTimeout(() => {
@@ -394,7 +394,7 @@
 			// Handle backend unavailable
 			else if (error.isBackendError) {
 				errorType = 'backend';
-				errorMessage = $_('errors.backend');
+				errorMessage = t('errors.backend');
 				increasePollingInterval();
 
 				errorRetryTimeoutId = setTimeout(() => {
@@ -407,7 +407,7 @@
 			// Generic error handling
 			else {
 				errorType = 'generic';
-				errorMessage = $_('errors.generic');
+				errorMessage = t('errors.generic');
 				increasePollingInterval();
 
 				errorRetryTimeoutId = setTimeout(() => {
@@ -683,7 +683,7 @@
 			const healthResponse = await fetch(`${apiBase}/health`);
 			if (healthResponse.ok) {
 				const healthData = await healthResponse.json();
-				appVersion = healthData.version || '1.5.4';
+				appVersion = healthData.version || '1.5.5';
 			}
 		} catch (err) {
 			// Version fetch failed, using fallback
@@ -887,16 +887,17 @@
 
 			if (count > 0) {
 				validationSuccess = true;
-				validationMessage = $_('config.location.validationSuccess', {
-					values: { count, plural: count !== 1 ? 's' : '' }
+				validationMessage = t('config.location.validationSuccess', {
+					count,
+					plural: count !== 1 ? 's' : ''
 				});
 			} else {
 				validationSuccess = false;
-				validationMessage = $_('config.location.validationNoRoutes');
+				validationMessage = t('config.location.validationNoRoutes');
 			}
 		} catch (error) {
 			validationSuccess = false;
-			validationMessage = $_('config.location.validationError');
+			validationMessage = t('config.location.validationError');
 		} finally {
 			validatingLocation = false;
 		}
@@ -904,7 +905,7 @@
 
 	function useCurrentLocation() {
 		if (!browser || !navigator.geolocation) {
-			locationError = $_('config.location.geolocationNotSupported');
+			locationError = t('config.location.geolocationNotSupported');
 			return;
 		}
 
@@ -930,16 +931,16 @@
 				gettingLocation = false;
 				switch (error.code) {
 					case error.PERMISSION_DENIED:
-						locationError = $_('config.location.geolocationPermissionDenied');
+						locationError = t('config.location.geolocationPermissionDenied');
 						break;
 					case error.POSITION_UNAVAILABLE:
-						locationError = $_('config.location.geolocationUnavailable');
+						locationError = t('config.location.geolocationUnavailable');
 						break;
 					case error.TIMEOUT:
-						locationError = $_('config.location.geolocationTimeout');
+						locationError = t('config.location.geolocationTimeout');
 						break;
 					default:
-						locationError = $_('config.location.geolocationError');
+						locationError = t('config.location.geolocationError');
 						break;
 				}
 			},
@@ -964,7 +965,7 @@
 </script>
 
 <svelte:head>
-	<title>{$config.title || $_('app.title')}</title>
+	<title>{$config.title || t('app.title')}</title>
 
 	<link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
 	<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
@@ -983,7 +984,7 @@
 				<tr>
 					<td id="logo">
 						<div class="logo-container">
-							<a href="https://transitapp.com" aria-label={$_('aria.transitApp')}>
+							<a href="https://transitapp.com" aria-label={t('aria.transitApp')}>
 								<img
 									src="/assets/images/transit.svg"
 									alt="Powered by Transit"
@@ -993,7 +994,7 @@
 							{#if $config.customLogo}
 								<img
 									src={$config.customLogo}
-									alt={$_('aria.customLogo')}
+									alt={t('aria.customLogo')}
 									class="custom-logo"
 									onerror={(e) => ((e.currentTarget as HTMLImageElement).style.display = 'none')}
 								/>
@@ -1001,8 +1002,8 @@
 						</div>
 					</td>
 					<td id="title">
-						<h1>{$config.title || $_('app.nearbyRoutes')}</h1>
-						<button type="button" onclick={openConfig} aria-label={$_('aria.settings')}
+						<h1>{$config.title || t('app.nearbyRoutes')}</h1>
+						<button type="button" onclick={openConfig} aria-label={t('aria.settings')}
 							><iconify-icon icon="ix:cogwheel-filled"></iconify-icon></button
 						>
 					</td>
@@ -1050,9 +1051,9 @@
 			</div>
 		{/if}
 		{#if loading}
-			<div class="loading">{$_('routes.loading')}</div>
+			<div class="loading">{t('routes.loading')}</div>
 		{:else if routes.length === 0}
-			<div class="no-routes">{$_('routes.noRoutes')}</div>
+			<div class="no-routes">{t('routes.noRoutes')}</div>
 		{:else if $config.viewMode === 'vertical'}
 			<section
 				id="routes"
@@ -1120,8 +1121,8 @@
 									type="button"
 									class="btn-route-control"
 									onclick={() => moveRouteToTop(index)}
-									aria-label={$_('aria.moveRouteToTop')}
-									title={$_('routes.controls.moveToTop')}
+									aria-label={t('aria.moveRouteToTop')}
+									title={t('routes.controls.moveToTop')}
 								>
 									<iconify-icon icon="ix:double-chevron-up"></iconify-icon>
 								</button>
@@ -1131,8 +1132,8 @@
 									type="button"
 									class="btn-route-control"
 									onclick={() => moveRoute(index, 'up')}
-									aria-label={$_('aria.moveRouteUp')}
-									title={$_('routes.controls.moveUp')}
+									aria-label={t('aria.moveRouteUp')}
+									title={t('routes.controls.moveUp')}
 								>
 									<iconify-icon icon="ix:arrow-up"></iconify-icon>
 								</button>
@@ -1142,8 +1143,8 @@
 									type="button"
 									class="btn-route-control"
 									onclick={() => moveRoute(index, 'down')}
-									aria-label={$_('aria.moveRouteDown')}
-									title={$_('routes.controls.moveDown')}
+									aria-label={t('aria.moveRouteDown')}
+									title={t('routes.controls.moveDown')}
 								>
 									<iconify-icon icon="ix:arrow-down"></iconify-icon>
 								</button>
@@ -1152,8 +1153,8 @@
 								type="button"
 								class="btn-route-control"
 								onclick={() => toggleRouteHidden(route.global_route_id)}
-								aria-label={$_('aria.hideRoute')}
-								title={$_('routes.controls.hide')}
+								aria-label={t('aria.hideRoute')}
+								title={t('routes.controls.hide')}
 							>
 								<iconify-icon icon="ix:eye-cancelled-filled"></iconify-icon>
 							</button>
@@ -1167,8 +1168,8 @@
 	{#if $config.showQRCode && !$config.isEditing && $config.viewMode !== 'board' && $config.viewMode !== 'vertical'}
 		<div class="floating-qr">
 			<p class="qr-label">
-				<span class="qr-label-1">{$_('config.qrCode.scanPrompt')}<br /></span>
-				<span class="qr-label-2">{$_('config.qrCode.scanPrompt2')}</span>
+				<span class="qr-label-1">{t('config.qrCode.scanPrompt')}<br /></span>
+				<span class="qr-label-2">{t('config.qrCode.scanPrompt2')}</span>
 			</p>
 			<QRCode latitude={$config.latLng.latitude} longitude={$config.latLng.longitude} size={100} />
 		</div>

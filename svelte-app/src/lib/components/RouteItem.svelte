@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { _ } from 'svelte-i18n';
+	import { t } from '$lib/i18n';
 	import { browser } from '$app/environment';
 	import { config } from '$lib/stores/config';
 	import type { Route, ScheduleItem, Itinerary } from '$lib/services/nearby';
@@ -653,7 +653,7 @@
 				} else if (hasDescription) {
 					return alert.description;
 				} else {
-					return $_('alerts.default');
+					return t('alerts.default');
 				}
 			})
 			.join('\n\n---\n\n');
@@ -1087,7 +1087,7 @@
 					class="alert-header-text"
 					class:scrolling={isAlertHeaderOverflowing}
 					use:bindAlertHeaderElement
-					>{$_('alerts.title')} - {[alertRouteName, alertModeName].filter(Boolean).join(' ')}</span
+					>{t('alerts.title')} - {[alertRouteName, alertModeName].filter(Boolean).join(' ')}</span
 				>
 				<span class="alert-count-badge">{relevantAlertCount}</span>
 			</div>

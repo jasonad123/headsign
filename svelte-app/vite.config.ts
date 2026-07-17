@@ -33,6 +33,15 @@ export default defineConfig({
 
 	// Pre-optimize dependencies for faster dev server startup
 	optimizeDeps: {
-		include: ['svelte-i18n', '@svelte-put/qr/svg/QR.svelte']
+		include: ['i18next', '@svelte-put/qr/svg/QR.svelte']
+	},
+
+	// i18next ships CJS by default, so Vite's SSR build externalizes it
+	// instead of bundling it in (unlike the old pure-ESM svelte-i18n). The
+	// production Docker image only installs the root server's dependencies,
+	// not svelte-app's, so an externalized import would fail to resolve at
+	// runtime — force it to be bundled into the SSR output instead.
+	ssr: {
+		noExternal: ['i18next']
 	}
 });

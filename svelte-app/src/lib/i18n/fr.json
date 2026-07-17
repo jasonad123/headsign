@@ -43,8 +43,9 @@
 			"auto": "Auto",
 			"manualColumnControl": "Commande manuelle de la colonne",
 			"automaticColumnControl": "Utilisation de la disposition automatique des colonnes",
-			"word": "{count, plural, one {1 colonne} other {{count} colonnes}}",
-			"columnWarning": "Les colonnes peuvent paraître trop étroites à cette largeur d'écran. ({nomColWidth}px par colonne)",
+			"word_one": "1 colonne",
+			"word_other": "{{count}} colonnes",
+			"columnWarning": "Les colonnes peuvent paraître trop étroites à cette largeur d'écran. ({{nomColWidth}}px par colonne)",
 			"disabledInVerticalMode": "Les controles de colonne ne sont pas utilisés en mode Vertical"
 		},
 		"theme": {
@@ -112,7 +113,7 @@
 		},
 		"location": {
 			"validating": "Chargement votre emplacement...",
-			"validationSuccess": "L'emplacement défini - {count} ligne{plural} trouvées à proximité",
+			"validationSuccess": "L'emplacement défini - {{count}} ligne{{plural}} trouvées à proximité",
 			"validationNoRoutes": "Aucune ligne trouvée à proximité",
 			"validationError": "Impossible de valider l'emplacement",
 			"geolocationNotSupported": "La géolocalisation n'est pas prise en charge par votre navigateur.",
@@ -157,7 +158,7 @@
 	},
 	"stops": {
 		"distance": {
-			"away": "à {distance}"
+			"away": "à {{distance}}"
 		}
 	},
 	"alerts": {
@@ -179,7 +180,7 @@
 		"developerMessage": "Développeurs web : utilisez toggleWidthCheck() dans la console pour désactiver ce message."
 	},
 	"errors": {
-		"rateLimit": "Vérification des mises à jour. J'essaie encore dans {seconds} secondes...",
+		"rateLimit": "Vérification des mises à jour. J'essaie encore dans {{seconds}} secondes...",
 		"auth": "Impossible de se connecter au API de Transit.",
 		"timeout": "Vérification des mises à jour...",
 		"backend": "Headsign est hors service. J'essaie encore...",

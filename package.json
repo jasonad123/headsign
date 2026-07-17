@@ -1,6 +1,6 @@
 {
 	"name": "headsign-server",
-	"version": "1.5.4",
+	"version": "1.5.5",
 	"main": "server/app.js",
 	"dependencies": {
 		"compression": "^1.8.1",
@@ -24,7 +24,7 @@
 	"engines": {
 		"node": ">=24.0.0"
 	},
-	"packageManager": "pnpm@10.34.1",
+	"packageManager": "pnpm@10.34.5",
 	"private": true,
 	"devDependencies": {
 		"@playwright/test": "^1.59.1",

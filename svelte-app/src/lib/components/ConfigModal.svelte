@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { _ } from 'svelte-i18n';
+	import { t } from '$lib/i18n';
 	import { config } from '$lib/stores/config';
 	import { formatCoordinatesForDisplay } from '$lib/utils/formatters';
 	import Toggle from '$lib/components/Toggle.svelte';
@@ -112,15 +112,15 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div class="modal-backdrop" onclick={onclose} transition:fade={{ duration: 200 }}>
 		<div class="config-modal" onclick={(e) => e.stopPropagation()}>
-			<h2>{$_('config.title')}</h2>
+			<h2>{t('config.title')}</h2>
 			<form onsubmit={(e) => e.preventDefault()}>
 				<label>
-					{$_('config.fields.title')}
+					{t('config.fields.title')}
 					<input type="text" bind:value={$config.title} />
 				</label>
 
 				<label>
-					{$_('config.fields.location')}
+					{t('config.fields.location')}
 					<div class="location-input-group">
 						<input
 							type="text"
@@ -151,7 +151,7 @@
 							type="button"
 							class="btn-map-picker"
 							onclick={openLocationPicker}
-							title={$_('config.location.pickOnMap')}
+							title={t('config.location.pickOnMap')}
 						>
 							<iconify-icon icon="ix:map"></iconify-icon>
 						</button>
@@ -160,7 +160,7 @@
 						<span class="location-error">{locationError}</span>
 					{/if}
 					{#if validatingLocation}
-						<span class="location-validating">{$_('config.location.validating')}</span>
+						<span class="location-validating">{t('config.location.validating')}</span>
 					{:else if validationMessage}
 						<span
 							class="location-validation"
@@ -173,25 +173,25 @@
 				</label>
 
 				<label>
-					{$_('config.fields.timeFormat')}
+					{t('config.fields.timeFormat')}
 					<select bind:value={$config.timeFormat}>
-						<option value="hh:mm A">{$_('config.timeFormats.12hour')}</option>
-						<option value="hh:mm">{$_('config.timeFormats.12hourNoAmPm')}</option>
-						<option value="HH:mm">{$_('config.timeFormats.24hour')}</option>
+						<option value="hh:mm A">{t('config.timeFormats.12hour')}</option>
+						<option value="hh:mm">{t('config.timeFormats.12hourNoAmPm')}</option>
+						<option value="HH:mm">{t('config.timeFormats.24hour')}</option>
 					</select>
 				</label>
 
 				<label>
-					{$_('config.fields.language')}
+					{t('config.fields.language')}
 					<select bind:value={$config.language}>
-						<option value="en">{$_('config.languages.english')}</option>
-						<option value="fr">{$_('config.languages.french')}</option>
-						<option value="es">{$_('config.languages.spanish')}</option>
-						<option value="de">{$_('config.languages.german')}</option>
+						<option value="en">{t('config.languages.english')}</option>
+						<option value="fr">{t('config.languages.french')}</option>
+						<option value="es">{t('config.languages.spanish')}</option>
+						<option value="de">{t('config.languages.german')}</option>
 					</select>
 				</label>
 				<label>
-					{$_('config.fields.maxDistance')}
+					{t('config.fields.maxDistance')}
 					<input
 						type="range"
 						min="250"
@@ -213,26 +213,26 @@
 					</div>
 				</label>
 
-				<SolidSection title={$_('config.sections.display')}>
+				<SolidSection title={t('config.sections.display')}>
 					<div class="toggle-container">
 						<Toggle
 							bind:checked={$config.manualColumnsMode}
 							disabled={$config.scaleMode === 'auto' || $config.viewMode === 'vertical'}
 						>
 							{#snippet label()}
-								<span>{$_('config.columns.manualColumnControl')}</span>
+								<span>{t('config.columns.manualColumnControl')}</span>
 							{/snippet}
 						</Toggle>
 						{#if $config.viewMode === 'vertical'}
-							<small class="toggle-help-text">{$_('config.columns.disabledInVerticalMode')}</small>
+							<small class="toggle-help-text">{t('config.columns.disabledInVerticalMode')}</small>
 						{:else if $config.scaleMode === 'auto'}
-							<small class="toggle-help-text">{$_('config.autoScale.autoColumnsHelpText')}</small>
+							<small class="toggle-help-text">{t('config.autoScale.autoColumnsHelpText')}</small>
 						{/if}
 					</div>
 
 					{#if $config.manualColumnsMode && typeof $config.columns === 'number'}
 						<label>
-							{$_('config.fields.columns')}
+							{t('config.fields.columns')}
 							<div class="slider-with-reset">
 								<input
 									type="range"
@@ -256,13 +256,13 @@
 									onclick={() => {
 										config.update((c) => ({ ...c, columns: 4 as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 }));
 									}}
-									title={$_('config.buttons.resetToDefault')}
+									title={t('config.buttons.resetToDefault')}
 								>
 									<iconify-icon icon="ix:refresh"></iconify-icon>
 								</button>
 							</div>
 							<div class="slider-value">
-								{$_('config.columns.word', { values: { count: $config.columns } })}
+								{t('config.columns.word', { count: $config.columns })}
 							</div>
 							{#if columnsWarning}
 								<span class="column-warning">
@@ -271,11 +271,11 @@
 							{/if}
 						</label>
 					{:else if $config.scaleMode !== 'auto'}
-						<small class="toggle-help-text">{$_('config.columns.automaticColumnControl')}</small>
+						<small class="toggle-help-text">{t('config.columns.automaticColumnControl')}</small>
 					{/if}
 
 					<label>
-						{$_('config.routeDisplay.viewMode')}
+						{t('config.routeDisplay.viewMode')}
 						<div class="button-group">
 							<button
 								type="button"
@@ -289,7 +289,7 @@
 									}))}
 							>
 								<iconify-icon icon="ix:application-screen"></iconify-icon>
-								{$_('config.routeDisplay.card')}
+								{t('config.routeDisplay.card')}
 							</button>
 							<button
 								type="button"
@@ -303,7 +303,7 @@
 									}))}
 							>
 								<iconify-icon icon="ix:table"></iconify-icon>
-								{$_('config.routeDisplay.board')}
+								{t('config.routeDisplay.board')}
 							</button>
 							<button
 								type="button"
@@ -319,23 +319,23 @@
 									}))}
 							>
 								<iconify-icon icon="ix:list"></iconify-icon>
-								{$_('config.routeDisplay.vertical')}
+								{t('config.routeDisplay.vertical')}
 							</button>
 						</div>
-						<small class="help-text">{$_('config.routeDisplay.viewModeHelpText')}</small>
+						<small class="help-text">{t('config.routeDisplay.viewModeHelpText')}</small>
 					</label>
 
 					<div class="toggle-container">
 						<Toggle bind:checked={$config.showQRCode}>
 							{#snippet label()}
-								<span>{$_('config.fields.showQRCode')}</span>
+								<span>{t('config.fields.showQRCode')}</span>
 							{/snippet}
 						</Toggle>
-						<small class="toggle-help-text">{$_('config.qrCode.helpText')}</small>
+						<small class="toggle-help-text">{t('config.qrCode.helpText')}</small>
 					</div>
 
 					<label>
-						{$_('config.fields.scaleMode')}
+						{t('config.fields.scaleMode')}
 						<div class="button-group">
 							<button
 								type="button"
@@ -349,7 +349,7 @@
 										columns: 'auto'
 									}))}
 							>
-								{$_('config.scaleMode.auto')}
+								{t('config.scaleMode.auto')}
 							</button>
 							<button
 								type="button"
@@ -357,15 +357,15 @@
 								class:active={$config.scaleMode === 'manual'}
 								onclick={() => config.update((c) => ({ ...c, scaleMode: 'manual' }))}
 							>
-								{$_('config.scaleMode.manual')}
+								{t('config.scaleMode.manual')}
 							</button>
 						</div>
-						<small class="toggle-help-text">{$_('config.scaleMode.helpText')}</small>
+						<small class="toggle-help-text">{t('config.scaleMode.helpText')}</small>
 					</label>
 
 					{#if $config.scaleMode === 'auto'}
 						<label style="margin-top: 0.75rem;">
-							{$_('config.fields.autoScaleMinimum')}
+							{t('config.fields.autoScaleMinimum')}
 							<div class="slider-with-reset">
 								<input
 									type="range"
@@ -390,7 +390,7 @@
 									onclick={() => {
 										config.update((c) => ({ ...c, autoScaleMinimum: 0.65 }));
 									}}
-									title={$_('config.buttons.resetToDefault')}
+									title={t('config.buttons.resetToDefault')}
 								>
 									<iconify-icon icon="ix:refresh"></iconify-icon>
 								</button>
@@ -400,19 +400,19 @@
 							</div>
 							{#if contentScale < 1}
 								<div class="current-scale-indicator">
-									{$_('config.autoScale.currentScale')}
+									{t('config.autoScale.currentScale')}
 									{Math.round(contentScale * 100)}%
 								</div>
 							{/if}
 							<small class="help-text" style="display: block; margin-top: 0.25rem;">
-								{$_('config.autoScaleMinimum.helpText')}
+								{t('config.autoScaleMinimum.helpText')}
 							</small>
 						</label>
 					{/if}
 
 					{#if $config.scaleMode === 'manual'}
 						<label style="margin-top: 0.75rem;">
-							{$_('config.fields.manualScale')}
+							{t('config.fields.manualScale')}
 							<div class="slider-with-reset">
 								<input
 									type="range"
@@ -436,7 +436,7 @@
 									onclick={() => {
 										config.update((c) => ({ ...c, manualScale: 1.0 }));
 									}}
-									title={$_('config.buttons.resetToDefault')}
+									title={t('config.buttons.resetToDefault')}
 								>
 									<iconify-icon icon="ix:refresh"></iconify-icon>
 								</button>
@@ -445,15 +445,15 @@
 								{Math.round($config.manualScale * 100)}%
 							</div>
 							<small class="help-text" style="display: block; margin-top: 0.25rem;">
-								{$_('config.manualScale.helpText')}
+								{t('config.manualScale.helpText')}
 							</small>
 						</label>
 					{/if}
 				</SolidSection>
 
-				<SolidSection title={$_('config.sections.style')}>
+				<SolidSection title={t('config.sections.style')}>
 					<label>
-						{$_('config.fields.theme')}
+						{t('config.fields.theme')}
 						<div class="button-group">
 							<button
 								type="button"
@@ -461,7 +461,7 @@
 								class:active={$config.theme === 'light'}
 								onclick={() => config.update((c) => ({ ...c, theme: 'light' }))}
 							>
-								{$_('config.theme.light')}
+								{t('config.theme.light')}
 							</button>
 							<button
 								type="button"
@@ -469,7 +469,7 @@
 								class:active={$config.theme === 'auto'}
 								onclick={() => config.update((c) => ({ ...c, theme: 'auto' }))}
 							>
-								{$_('config.theme.auto')}
+								{t('config.theme.auto')}
 							</button>
 							<button
 								type="button"
@@ -477,13 +477,13 @@
 								class:active={$config.theme === 'dark'}
 								onclick={() => config.update((c) => ({ ...c, theme: 'dark' }))}
 							>
-								{$_('config.theme.dark')}
+								{t('config.theme.dark')}
 							</button>
 						</div>
 					</label>
 
 					<label>
-						{$_('config.fields.headerColor')}
+						{t('config.fields.headerColor')}
 						<div style="display: flex; gap: 0.5em; align-items: center;">
 							<input type="color" bind:value={$config.headerColor} />
 							<button
@@ -493,21 +493,21 @@
 									const defaultColor = $config.theme === 'dark' ? '#1f7a42' : '#30b566';
 									config.update((c) => ({ ...c, headerColor: defaultColor }));
 								}}
-								title={$_('config.buttons.resetToDefault')}
+								title={t('config.buttons.resetToDefault')}
 							>
-								{$_('config.buttons.reset')}
+								{t('config.buttons.reset')}
 							</button>
 						</div>
 					</label>
 
 					<label>
-						{$_('config.fields.customLogo')}
+						{t('config.fields.customLogo')}
 						<input
 							type="text"
 							bind:value={$config.customLogo}
 							placeholder="https://example.com/logo.png or /assets/images/logo.png"
 						/>
-						<small class="help-text">{$_('config.customLogo.helpText')}</small>
+						<small class="help-text">{t('config.customLogo.helpText')}</small>
 						{#if $config.customLogo}
 							<div style="display: flex; gap: 0.5em; margin-top: 0.5em;">
 								<button
@@ -515,7 +515,7 @@
 									class="btn-reset"
 									onclick={() => config.update((c) => ({ ...c, customLogo: null }))}
 								>
-									{$_('config.customLogo.clear')}
+									{t('config.customLogo.clear')}
 								</button>
 							</div>
 							<div class="logo-preview">
@@ -527,7 +527,7 @@
 										if (parent) {
 											const errorSpan = document.createElement('span');
 											errorSpan.className = 'error';
-											errorSpan.textContent = $_('config.customLogo.invalidUrl');
+											errorSpan.textContent = t('config.customLogo.invalidUrl');
 											parent.replaceChildren(errorSpan);
 										}
 									}}
@@ -537,27 +537,27 @@
 					</label>
 				</SolidSection>
 
-				<SolidSection title={$_('config.sections.routeOptions')}>
+				<SolidSection title={t('config.sections.routeOptions')}>
 					<div class="toggle-container">
 						<Toggle
 							bind:checked={$config.groupItinerariesByStop}
 							disabled={$config.viewMode === 'board' || $config.viewMode === 'vertical'}
 						>
 							{#snippet label()}
-								<span>{$_('config.fields.groupItinerariesByStop')}</span>
+								<span>{t('config.fields.groupItinerariesByStop')}</span>
 							{/snippet}
 						</Toggle>
 						{#if $config.viewMode === 'board'}
 							<small class="toggle-help-text"
-								>{$_('config.stopManagement.groupAlwaysOnInBoardMode')}</small
+								>{t('config.stopManagement.groupAlwaysOnInBoardMode')}</small
 							>
 						{:else if $config.viewMode === 'vertical'}
 							<small class="toggle-help-text"
-								>{$_('config.stopManagement.groupAlwaysOnInVerticalMode')}</small
+								>{t('config.stopManagement.groupAlwaysOnInVerticalMode')}</small
 							>
 						{:else}
 							<small class="toggle-help-text"
-								>{$_('config.stopManagement.groupItinerarieshelpText')}</small
+								>{t('config.stopManagement.groupItinerarieshelpText')}</small
 							>
 						{/if}
 					</div>
@@ -565,29 +565,29 @@
 					<div class="toggle-container">
 						<Toggle bind:checked={$config.filterRedundantTerminus}>
 							{#snippet label()}
-								<span>{$_('config.fields.filterRedundantTerminus')}</span>
+								<span>{t('config.fields.filterRedundantTerminus')}</span>
 							{/snippet}
 						</Toggle>
 						<small class="toggle-help-text"
-							>{$_('config.stopManagement.filterTerminushelpText')}</small
+							>{t('config.stopManagement.filterTerminushelpText')}</small
 						>
 					</div>
 
 					<div class="toggle-container">
 						<Toggle bind:checked={$config.showRouteLongName}>
 							{#snippet label()}
-								<span>{$_('config.fields.showRouteLongName')}</span>
+								<span>{t('config.fields.showRouteLongName')}</span>
 							{/snippet}
 						</Toggle>
 						<small class="toggle-help-text"
-							>{$_('config.routeDisplay.showRouteLongNameHelpText')}</small
+							>{t('config.routeDisplay.showRouteLongNameHelpText')}</small
 						>
 					</div>
 				</SolidSection>
 
 				<CollapsibleSection
-					title={$_('config.hiddenAgencies.title')}
-					helpText={$_('config.hiddenAgencies.helpText')}
+					title={t('config.hiddenAgencies.title')}
+					helpText={t('config.hiddenAgencies.helpText')}
 					initiallyOpen={true}
 				>
 					{#if allAgencies.length > 0}
@@ -611,8 +611,8 @@
 				</CollapsibleSection>
 
 				<CollapsibleSection
-					title={$_('config.hiddenRoutes.title')}
-					helpText={$_('config.hiddenRoutes.helpText')}
+					title={t('config.hiddenRoutes.title')}
+					helpText={t('config.hiddenRoutes.helpText')}
 					initiallyOpen={false}
 				>
 					{#if $config.hiddenRoutes.length > 0}
@@ -634,8 +634,8 @@
 				</CollapsibleSection>
 
 				<CollapsibleSection
-					title={$_('config.hiddenStops.title')}
-					helpText={$_('config.hiddenStops.helpText')}
+					title={t('config.hiddenStops.title')}
+					helpText={t('config.hiddenStops.helpText')}
 					initiallyOpen={false}
 				>
 					{#if ($config.hiddenStops || []).length > 0}
@@ -657,7 +657,7 @@
 				</CollapsibleSection>
 
 				<div class="credits">
-					<h3>{$_('config.credits.title')}</h3>
+					<h3>{t('config.credits.title')}</h3>
 					<h4>
 						Headsign version <a
 							href="https://github.com/jasonad123/headsign/releases/tag/v{appVersion}"
@@ -666,10 +666,10 @@
 						>
 					</h4>
 					<p class="help-text">
-						{@html $_('config.credits.madeWith')}
+						{@html t('config.credits.madeWith')}
 					</p>
 					<p class="help-text">
-						{@html $_('config.credits.links')}
+						{@html t('config.credits.links')}
 					</p>
 					<a
 						href="https://transitapp.com/partners/apis"
@@ -683,7 +683,7 @@
 
 				<div class="modal-actions">
 					<button type="button" class="btn-cancel" onclick={onclose}>
-						{$_('config.buttons.cancel')}
+						{t('config.buttons.cancel')}
 					</button>
 					<button
 						type="button"
@@ -694,7 +694,7 @@
 							onsave();
 						}}
 					>
-						{$_('config.buttons.save')}
+						{t('config.buttons.save')}
 					</button>
 				</div>
 			</form>

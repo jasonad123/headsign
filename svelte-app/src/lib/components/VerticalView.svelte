@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { _ } from 'svelte-i18n';
+	import { t } from '$lib/i18n';
 	import RouteIcon from './RouteIcon.svelte';
 	import type { Route, Itinerary, ScheduleItem } from '$lib/services/nearby';
 	import { getMinutesUntil } from '$lib/utils/timeUtils';
@@ -278,7 +278,7 @@
 				} else if (hasDescription) {
 					return `${prefix}${alert.description}`;
 				} else {
-					return `${prefix}${$_('alerts.default')}`;
+					return `${prefix}${t('alerts.default')}`;
 				}
 			})
 			.join('\n\n---\n\n');
@@ -309,8 +309,8 @@
 					<span class="stop-name">{group.stopName}</span>
 					{#if isFinite(group.distance)}
 						<span class="stop-distance"
-							>{$_('stops.distance.away', {
-								values: { distance: formatDistance(group.distance) }
+							>{t('stops.distance.away', {
+								distance: formatDistance(group.distance)
 							})}</span
 						>
 					{/if}
@@ -321,7 +321,7 @@
 									type="button"
 									class="btn-stop-control"
 									onclick={() => onMoveStopToTop(group.stopId)}
-									title={$_('routes.controls.moveStopToTop')}
+									title={t('routes.controls.moveStopToTop')}
 								>
 									<iconify-icon icon="ix:double-chevron-up"></iconify-icon>
 								</button>
@@ -331,7 +331,7 @@
 									type="button"
 									class="btn-stop-control"
 									onclick={() => onMoveStop(group.stopId, 'up')}
-									title={$_('routes.controls.moveStopUp')}
+									title={t('routes.controls.moveStopUp')}
 								>
 									<iconify-icon icon="ix:arrow-up"></iconify-icon>
 								</button>
@@ -341,7 +341,7 @@
 									type="button"
 									class="btn-stop-control"
 									onclick={() => onMoveStop(group.stopId, 'down')}
-									title={$_('routes.controls.moveStopDown')}
+									title={t('routes.controls.moveStopDown')}
 								>
 									<iconify-icon icon="ix:arrow-down"></iconify-icon>
 								</button>
@@ -351,7 +351,7 @@
 									type="button"
 									class="btn-stop-control"
 									onclick={() => onHideStop(group.stopId)}
-									title={$_('routes.controls.hideStop')}
+									title={t('routes.controls.hideStop')}
 								>
 									<iconify-icon icon="ix:eye-cancelled-filled"></iconify-icon>
 								</button>
@@ -384,7 +384,7 @@
 								<iconify-icon
 									icon={row.alertIcon}
 									class="route-alert-icon {row.alertSeverity}"
-									title={$_('alerts.title')}
+									title={t('alerts.title')}
 								></iconify-icon>
 							{/if}
 							{#each row.departures as item}
@@ -399,7 +399,7 @@
 								type="button"
 								class="btn-row-hide"
 								onclick={() => onHideRoute(row.route.global_route_id)}
-								title={$_('routes.controls.hide')}
+								title={t('routes.controls.hide')}
 							>
 								<iconify-icon icon="ix:eye-cancelled-filled"></iconify-icon>
 							</button>
@@ -426,7 +426,7 @@
 						class:info={mostSevereLevel === 'info'}
 					>
 						<iconify-icon icon={mostSevereIcon}></iconify-icon>
-						<span class="alert-title">{$_('alerts.title')}</span>
+						<span class="alert-title">{t('alerts.title')}</span>
 						<span class="alert-count-badge">{consolidatedAlerts.length}</span>
 					</div>
 
@@ -454,8 +454,8 @@
 			{#if showQRCode}
 				<div class="qr-slot" class:solo={consolidatedAlerts.length === 0}>
 					<p class="qr-label">
-						<span class="qr-label-1">{$_('config.qrCode.scanPrompt')}<br /></span>
-						<span class="qr-label-2">{$_('config.qrCode.scanPrompt2')}</span>
+						<span class="qr-label-1">{t('config.qrCode.scanPrompt')}<br /></span>
+						<span class="qr-label-2">{t('config.qrCode.scanPrompt2')}</span>
 					</p>
 					<QRCode
 						latitude={$config.latLng.latitude}

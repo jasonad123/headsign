@@ -43,8 +43,9 @@
 			"auto": "Auto",
 			"manualColumnControl": "Manuelle Spaltensteuerung",
 			"automaticColumnControl": "Verwendung automatische Spaltensteuerung",
-			"word": "{count, plural, one {1 Spalte} other {{count} Spalten}}",
-			"columnWarning": "Die Spalten sind bei dieser Bildschirmbreite möglicherweise zu schmal. ({nomColWidth}px pro Spalte)",
+			"word_one": "1 Spalte",
+			"word_other": "{{count}} Spalten",
+			"columnWarning": "Die Spalten sind bei dieser Bildschirmbreite möglicherweise zu schmal. ({{nomColWidth}}px pro Spalte)",
 			"disabledInVerticalMode": "Spaltensteuerung wird im Vertikalmodus nicht verwendet"
 		},
 		"theme": {
@@ -112,7 +113,7 @@
 		},
 		"location": {
 			"validating": "Standort wird überprüft...",
-			"validationSuccess": "Standort festgelegt - {count} Linien in der Nähe gefunden",
+			"validationSuccess": "Standort festgelegt - {{count}} Linien in der Nähe gefunden",
 			"validationNoRoutes": "An diesem Standort wurden keine Routen gefunden.",
 			"validationError": "Standort konnte nicht überprüft werden.",
 			"geolocationNotSupported": "Die Geolocation-Funktion wird von Ihrem Browser nicht unterstützt.",
@@ -157,7 +158,7 @@
 	},
 	"stops": {
 		"distance": {
-			"away": "{distance} entfernt"
+			"away": "{{distance}} entfernt"
 		}
 	},
 	"alerts": {
@@ -179,7 +180,7 @@
 		"developerMessage": "Webentwickler*innen: Verwenden Sie toggleWidthCheck() in der Konsole, um diese Meldung zu deaktivieren."
 	},
 	"errors": {
-		"rateLimit": "Überprüfung auf Updates. Erneuter Versuch in {seconds} Sekunden...",
+		"rateLimit": "Überprüfung auf Updates. Erneuter Versuch in {{seconds}} Sekunden...",
 		"auth": "Verbindung zum Transit-API nicht möglich.",
 		"timeout": "Überprüfung auf Updates...",
 		"backend": "Headsign ist außer Betrieb. Erneuter Versuch...",
