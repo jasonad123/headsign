@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { browser } from '$app/environment';
-	import { _ } from 'svelte-i18n';
+	import { t } from '$lib/i18n';
 	import { untrack } from 'svelte';
 	import { config } from '$lib/stores/config';
 	import type { LatLng } from '$lib/stores/config';
@@ -159,7 +159,7 @@
 
 	function useCurrentLocationInMap() {
 		if (!browser || !navigator.geolocation) {
-			alert($_('config.location.geolocationNotSupported'));
+			alert(t('config.location.geolocationNotSupported'));
 			return;
 		}
 
@@ -187,17 +187,17 @@
 			},
 			(error) => {
 				gettingLocation = false;
-				let errorMessage = $_('config.location.geolocationError');
+				let errorMessage = t('config.location.geolocationError');
 
 				switch (error.code) {
 					case error.PERMISSION_DENIED:
-						errorMessage = $_('config.location.geolocationPermissionDenied');
+						errorMessage = t('config.location.geolocationPermissionDenied');
 						break;
 					case error.POSITION_UNAVAILABLE:
-						errorMessage = $_('config.location.geolocationUnavailable');
+						errorMessage = t('config.location.geolocationUnavailable');
 						break;
 					case error.TIMEOUT:
-						errorMessage = $_('config.location.geolocationTimeout');
+						errorMessage = t('config.location.geolocationTimeout');
 						break;
 				}
 
@@ -223,7 +223,7 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div class="map-modal" onclick={(e) => e.stopPropagation()}>
 		<div class="modal-header">
-			<h2>{$_('config.location.mapPicker.title')}</h2>
+			<h2>{t('config.location.mapPicker.title')}</h2>
 			<button type="button" class="btn-close" onclick={onclose} aria-label="Close">
 				<iconify-icon icon="ix:close"></iconify-icon>
 			</button>
@@ -232,7 +232,7 @@
 		<div class="modal-instructions">
 			<div class="instructions-text">
 				<iconify-icon icon="ix:info-circle"></iconify-icon>
-				{$_('config.location.mapPicker.instructions')}
+				{t('config.location.mapPicker.instructions')}
 			</div>
 			<button
 				type="button"
@@ -248,8 +248,8 @@
 				</svg>
 				<span
 					>{gettingLocation
-						? $_('config.location.validating')
-						: $_('config.location.mapPicker.useMyLocation')}</span
+						? t('config.location.validating')
+						: t('config.location.mapPicker.useMyLocation')}</span
 				>
 			</button>
 		</div>
@@ -259,12 +259,12 @@
 		<div class="controls-bar">
 			<div class="coordinates-display">
 				<iconify-icon icon="ix:location-pin"></iconify-icon>
-				<span>{$_('config.location.mapPicker.coordinates')}: {formattedCoords}</span>
+				<span>{t('config.location.mapPicker.coordinates')}: {formattedCoords}</span>
 			</div>
 
 			<div class="radius-control">
 				<label>
-					<span>{$_('config.fields.maxDistance')}: {workingRadius}m</span>
+					<span>{t('config.fields.maxDistance')}: {workingRadius}m</span>
 					<input
 						type="range"
 						min="250"
@@ -279,10 +279,10 @@
 
 		<div class="modal-actions">
 			<button type="button" class="btn-cancel" onclick={onclose}>
-				{$_('config.location.mapPicker.cancel')}
+				{t('config.location.mapPicker.cancel')}
 			</button>
 			<button type="button" class="btn-save" onclick={handleSave}>
-				{$_('config.location.mapPicker.save')}
+				{t('config.location.mapPicker.save')}
 			</button>
 		</div>
 	</div>

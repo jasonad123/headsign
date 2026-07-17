@@ -2,26 +2,19 @@
 	import { config } from '$lib/stores/config';
 	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
-	import { init, locale, register } from 'svelte-i18n';
-	import { _ } from 'svelte-i18n';
+	import { initI18n, setLocale, t, type SupportedLng } from '$lib/i18n';
 	import '../app.css';
 	import 'iconify-icon';
 
-	let { children } = $props();
+	let { data, children } = $props();
 
-	// Register translation files
-	register('en', () => import('$lib/i18n/en.json'));
-	register('fr', () => import('$lib/i18n/fr.json'));
-	register('es', () => import('$lib/i18n/es.json'));
-	register('de', () => import('$lib/i18n/de.json'));
-
-	init({
-		fallbackLocale: 'en',
-		initialLocale: 'en'
-	});
-
-	// Set initial locale immediately
-	locale.set('en');
+	// Client-side: (re-)init i18next with the server-resolved locale so
+	// hydration matches the SSR-rendered markup exactly — no flash, no
+	// hydration mismatch. On the server this is a no-op (already awaited in
+	// +layout.server.ts's load()). Only needs to run once with the initial
+	// value, not reactively — later changes are handled by the $effect below.
+	// svelte-ignore state_referenced_locally
+	initI18n(data.locale as SupportedLng);
 
 	let systemPrefersDark = $state(false);
 	let windowWidth = $state(0);
@@ -32,8 +25,12 @@
 
 	onMount(async () => {
 		await config.load();
-		// Sync i18n locale with config language after loading config
-		locale.set($config.language);
+		// Sync i18n locale with config language after loading config, if it
+		// differs from the SSR-provided locale (e.g. first-ever visit with
+		// no cookie yet, where config.load() pulls from /api/config/unattended)
+		if ($config.language !== data.locale) {
+			await setLocale($config.language as SupportedLng);
+		}
 
 		// Detect system color scheme preference
 		if (browser && window.matchMedia) {
@@ -97,7 +94,7 @@
 	// Watch for config language changes
 	$effect(() => {
 		if ($config.language) {
-			locale.set($config.language);
+			setLocale($config.language as SupportedLng);
 		}
 	});
 
@@ -116,10 +113,10 @@
 	<div class="screen-width-warning">
 		<div class="warning-content">
 			<iconify-icon icon="ix:application-screen-alarm-classes"></iconify-icon>
-			<h2>{$_('screenWidth.title')}</h2>
-			<p class="min-width-message">{$_('screenWidth.message')}</p>
-			<p class="min-width-note">{$_('screenWidth.minimumWidth')}</p>
-			<p class="min-width-dev">{$_('screenWidth.developerMessage')}</p>
+			<h2>{t('screenWidth.title')}</h2>
+			<p class="min-width-message">{t('screenWidth.message')}</p>
+			<p class="min-width-note">{t('screenWidth.minimumWidth')}</p>
+			<p class="min-width-dev">{t('screenWidth.developerMessage')}</p>
 		</div>
 	</div>
 {/if}

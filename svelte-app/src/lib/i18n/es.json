@@ -43,8 +43,9 @@
 			"auto": "Auto",
 			"manualColumnControl": "Control manual de columna",
 			"automaticColumnControl": "Usando diseño de columna automático",
-			"word": "{count, plural, one {1 columna} other {{count} columnas}}",
-			"columnWarning": "Es posible que las columnas sean demasiado estrechas con este ancho de pantalla. ({nomColWidth}px por columna)",
+			"word_one": "1 columna",
+			"word_other": "{{count}} columnas",
+			"columnWarning": "Es posible que las columnas sean demasiado estrechas con este ancho de pantalla. ({{nomColWidth}}px por columna)",
 			"disabledInVerticalMode": "Los controles de columna no se usan en el modo Vertical"
 		},
 		"theme": {
@@ -112,7 +113,7 @@
 		},
 		"location": {
 			"validating": "Buscando ubicación...",
-			"validationSuccess": "Ubicación establecida - {count} ruta{plural} cercanas",
+			"validationSuccess": "Ubicación establecida - {{count}} ruta{{plural}} cercanas",
 			"validationNoRoutes": "No hay rutas encontradas cerca",
 			"validationError": "No se puede validar la ubicación",
 			"geolocationNotSupported": "Su navegador no admite la geolocalización",
@@ -157,7 +158,7 @@
 	},
 	"stops": {
 		"distance": {
-			"away": "a {distance}"
+			"away": "a {{distance}}"
 		}
 	},
 	"alerts": {
@@ -179,7 +180,7 @@
 		"developerMessage": "Programadores: usen toggleWidthCheck() en la consola para desactivar este mensaje."
 	},
 	"errors": {
-		"rateLimit": "Buscando actualizaciones. Reintentando en {seconds} segundos...",
+		"rateLimit": "Buscando actualizaciones. Reintentando en {{seconds}} segundos...",
 		"auth": "No se puede conectar al API de Transit.",
 		"timeout": "Buscando actualizaciones...",
 		"backend": "Headsign está fuera de servicio. Reintentando...",

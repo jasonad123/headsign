@@ -43,8 +43,9 @@
 			"auto": "Auto",
 			"manualColumnControl": "Manual column control",
 			"automaticColumnControl": "Using automatic column layout",
-			"word": "{count, plural, one {1 column} other {{count} columns}}",
-			"columnWarning": "Columns may be too narrow at this screen width ({nomColWidth}px per column)",
+			"word_one": "1 column",
+			"word_other": "{{count}} columns",
+			"columnWarning": "Columns may be too narrow at this screen width ({{nomColWidth}}px per column)",
 			"disabledInVerticalMode": "Column controls are not used in Vertical mode"
 		},
 		"theme": {
@@ -112,7 +113,7 @@
 		},
 		"location": {
 			"validating": "Checking location...",
-			"validationSuccess": "Location set - {count} route{plural} found nearby",
+			"validationSuccess": "Location set - {{count}} route{{plural}} found nearby",
 			"validationNoRoutes": "No routes found at this location",
 			"validationError": "Unable to validate location",
 			"geolocationNotSupported": "Geolocation is not supported by your browser",
@@ -163,7 +164,7 @@
 	},
 	"stops": {
 		"distance": {
-			"away": "{distance} away"
+			"away": "{{distance}} away"
 		}
 	},
 	"alerts": {
@@ -185,7 +186,7 @@
 		"developerMessage": "Developers: use toggleWidthCheck() in the console to disable this message"
 	},
 	"errors": {
-		"rateLimit": "Checking for updates. Retrying in {seconds} seconds...",
+		"rateLimit": "Checking for updates. Retrying in {{seconds}} seconds...",
 		"auth": "Can't connect to the Transit API.",
 		"timeout": "Checking for updates..",
 		"backend": "Headsign is out of service. Retrying...",

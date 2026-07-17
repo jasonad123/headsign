@@ -33,6 +33,6 @@ export default defineConfig({
 
 	// Pre-optimize dependencies for faster dev server startup
 	optimizeDeps: {
-		include: ['svelte-i18n', '@svelte-put/qr/svg/QR.svelte']
+		include: ['i18next', '@svelte-put/qr/svg/QR.svelte']
 	}
 });
