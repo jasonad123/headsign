@@ -19,7 +19,8 @@
 		"start-auth": "op run --env-file=\"./.env.local\" pnpm start",
 		"clean": "rm -rf node_modules svelte-app/node_modules svelte-app/.svelte-kit",
 		"format": "prettier --write .",
-		"lint": "prettier --check ."
+		"lint": "prettier --check .",
+		"version:bump": "node scripts/bump-version.js"
 	},
 	"engines": {
 		"node": ">=24.0.0"
