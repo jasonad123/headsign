@@ -1,10 +1,10 @@
 # Local testing/deployment (advanced users only)
 
-This documentation walks through how to deploy Transit TV using `pnpm`.
+This documentation walks through how to deploy Headsign using `pnpm`.
 
 > [!CAUTION]
 > This method is **not recommended** for production deployments. Use Docker or a PaaS platform instead.
-> **Only use this if** you're actively developing Transit TV or need to make custom modifications.
+> **Only use this if** you're actively developing Headsign or need to make custom modifications.
 
 1. **Install prerequisites**:
 
@@ -19,8 +19,8 @@ npm install -g pnpm
 2. **Clone and setup**:
 
 ```bash
-git clone https://github.com/jasonad123/Transit-TV.git
-cd transit-tv
+git clone https://github.com/jasonad123/headsign.git
+cd headsign
 
 # Install dependencies
 pnpm install

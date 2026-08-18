@@ -1,6 +1,6 @@
-# Transit TV - Svelte 5 Migration
+# Headsign - Svelte 5
 
-Modern rewrite of Transit TV using Svelte 5 + SvelteKit 2 + TypeScript.
+Real-time transit departure display built with Svelte 5 + SvelteKit 2 + TypeScript.
 
 ## Quick Start
 
@@ -9,7 +9,7 @@ Modern rewrite of Transit TV using Svelte 5 + SvelteKit 2 + TypeScript.
 Terminal 1 - Start Express backend:
 
 ```bash
-cd /Users/jasonadle/GitHub/Transit-TV
+cd /Users/jasonadle/GitHub/headsign
 pnpm install
 pnpm start
 ```
@@ -74,8 +74,8 @@ Express configuration dynamically loads the SvelteKit handler and serves:
 
 ```bash
 # Build and run with Docker
-docker build -f Dockerfile.svelte -t transit-tv-svelte .
-docker run -p 8080:8080 --env-file .env.docker transit-tv-svelte
+docker build -f Dockerfile.svelte -t headsign-svelte .
+docker run -p 8080:8080 --env-file .env.docker headsign-svelte
 
 # Or with Docker Compose
 docker compose up

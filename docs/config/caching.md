@@ -1,6 +1,6 @@
 # Caching
 
-Transit TV implements a multi-stage caching system to reduce unnecessary calls to the Transit API while still relatively fresh real-time data. The caching system relies on both server-side and client-side caching, both of which are
+Headsign implements a multi-stage caching system to reduce unnecessary calls to the Transit API while still relatively fresh real-time data. The caching system relies on both server-side and client-side caching, both of which are
 configurable using environment variables.
 
 The default caching variables are pre-set to respect the Transit API's free tier restrictions (5 calls/min, 1500 calls/month), but if you are a paid API customer, you can adjust these at any time.

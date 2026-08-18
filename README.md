@@ -1,23 +1,21 @@
-# Transit TV
+# Headsign
 
 A real-time transit display application that shows arrival times for nearby public transit.
 
-![Screenshot](/assets/transit-tv-reloaded-3.png)
+![Screenshot](/assets/headsign-screenshot.png)
 
 <div style="text-align:center">
 
-<img src="https://github.com/jasonad123/Transit-TV/blob/main/assets/transit-api-badge.png?raw=true" width="25%" />
+<img src="https://github.com/jasonad123/headsign/blob/main/assets/transit-api-badge.png?raw=true" width="25%" />
 
 </div>
 
-> [!IMPORTANT]
-> This is a _rewrite_ of the original Transit TV application in a more up-to-date stack.
-> If you're looking for _my fork_ of the original project, have a look at the [legacy branch](https://github.com/jasonad123/Transit-TV/tree/legacy) of this repo.
-> If you're looking for the original project, have a look over at [Transit App's account](https://github.com/TransitApp/Transit-TV)
+> [!NOTE]
+> Headsign is a rewrite of the original [Transit TV](https://github.com/TransitApp/Transit-TV) application by the Transit team, rebuilt in a modern stack with significant feature additions.
+> The original AngularJS fork is preserved on the [legacy branch](https://github.com/jasonad123/headsign/tree/legacy).
 
-> [!WARNING]  
-> Transit TV was built by the Transit team as a fun project to demo the API, usage of this project comes with no guarantee of any kind.
-> Just as the original Transit TV was built by the Transit team as a fun project, **_this_** version of this project comes with no guarantee of any kind. I am **not** affiliated with Transit, just big fans of their app.
+> [!WARNING]
+> Headsign comes with no guarantee of any kind. I am **not** affiliated with Transit, just a big fan of their app.
 
 ## Prerequisites
 

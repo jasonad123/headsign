@@ -1,8 +1,8 @@
 services:
   # Usage: docker compose up -d
-  transit-tv:
-    image: ghcr.io/jasonad123/transit-tv:latest
-    container_name: transit-tv
+  headsign:
+    image: ghcr.io/jasonad123/headsign:latest
+    container_name: headsign
     restart: unless-stopped
     ports:
       - '8080:8080'
@@ -21,7 +21,7 @@ services:
     #   - ./path/to/your/logo.png:/app/svelte-app/static/assets/images/logo.png:ro
 
     networks:
-      - transit-network
+      - headsign-network
 
     # Health check to ensure service is running
     healthcheck:
@@ -32,5 +32,5 @@ services:
       start_period: 40s
 
 networks:
-  transit-network:
+  headsign-network:
     driver: bridge

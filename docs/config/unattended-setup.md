@@ -1,6 +1,6 @@
 # Unattended Setup
 
-Transit TV includes a feature called Unattended Setup. Unattended Setup allows you to predefine a number of configuration settings ahead of time. This is useful if you're deploying it at scale and want to pre-customize your instance of Transit TV with customizations for your agency.
+Headsign includes a feature called Unattended Setup. Unattended Setup allows you to predefine a number of configuration settings ahead of time. This is useful if you're deploying it at scale and want to pre-customize your instance of Headsign with customizations for your agency.
 
 ## Enabling Unattended Setup
 
@@ -8,16 +8,16 @@ To enable Unattended Setup, you'll need to set the `UNATTENDED_SETUP` environmen
 
 ### Cloud platforms (Railway, Render, Fly.io)
 
-If you deploy Transit TV in using Railway or another cloud platform, this should be available in the "Variables" settings for the Transit TV service. This is also where you'll set the options for each Unattended Setup option.
+If you deploy Headsign using Railway or another cloud platform, this should be available in the "Variables" settings for the Headsign service. This is also where you'll set the options for each Unattended Setup option.
 
 ### Docker deployment
 
-If you deploy Transit TV manually using Docker Compose, you can either set it in your Compose file as an environment variable like so:
+If you deploy Headsign manually using Docker Compose, you can either set it in your Compose file as an environment variable like so:
 
 ```yaml
 services:
-  transit-tv:
-    image: jasonad123/transit-tv:latest
+  headsign:
+    image: jasonad123/headsign:latest
     # ...
     environment:
       # ...Other environment variables
@@ -32,8 +32,8 @@ or you can add it to a linked `.env` file.
 ```yaml
 services:
   # Usage: docker compose up -d
-  transit-tv:
-    image: jasonad123/transit-tv:latest
+  headsign:
+    image: jasonad123/headsign:latest
     # ...
     environment:
     # ...
@@ -154,8 +154,8 @@ If using Docker Compose, you can do this by mounting it to the static assets dir
 
 ```yaml
 services:
-  transit-tv:
-    image: jasonad123/transit-tv:latest
+  headsign:
+    image: jasonad123/headsign:latest
     # ...
     environment:
       # ...Other environment variables

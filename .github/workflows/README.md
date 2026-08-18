@@ -1,6 +1,6 @@
-# Transit-TV Docker Workflows
+# Headsign Docker Workflows
 
-This directory contains GitHub Actions workflows for building, publishing, and managing Docker images for Transit-TV.
+This directory contains GitHub Actions workflows for building, publishing, and managing Docker images for Headsign.
 
 ## Workflows
 
@@ -13,7 +13,7 @@ Builds and publishes multi-architecture (amd64, arm64) Docker images to GitHub C
 - Pushes to `main` branch (edge releases)
 - Manual workflow dispatch
 
-**Outputs**: Docker images tagged and pushed to `ghcr.io/jasonad123/transit-tv`
+**Outputs**: Docker images tagged and pushed to `ghcr.io/jasonad123/headsign`
 
 ### docker-publish-hardened.yml
 
@@ -23,7 +23,7 @@ Builds and publishes multi-architecture (amd64, arm64) Docker images to GitHub C
 - Semantic version tags (v1.2.3, v1.2.3-beta.1, v1.2.3-rc.2, etc.)
 - Manual workflow dispatch
 
-**Outputs**: Docker images tagged and pushed to `ghcr.io/jasonad123/transit-tv:hardened-(x)`
+**Outputs**: Docker images tagged and pushed to `ghcr.io/jasonad123/headsign:hardened-(x)`
 
 ### cleanup-images-action.yml
 
@@ -48,7 +48,7 @@ Reliable Docker image cleanup using the proven dataaxiom/ghcr-cleanup-action (v1
 
 **Manual Run**: Can be triggered manually with dry_run option (defaults to true)
 
-**Important**: Requires Admin role access to the transit-tv package in GitHub Settings.
+**Important**: Requires Admin role access to the headsign package in GitHub Settings.
 
 ### cleanup-untagged.yml
 
@@ -60,7 +60,7 @@ Removes untagged Docker image manifests (sha256 digests, platform-specific manif
 
 ## Release Process
 
-Transit-TV follows [Semantic Versioning](https://semver.org/) for all releases.
+Headsign follows [Semantic Versioning](https://semver.org/) for all releases.
 
 ### Stable Releases
 
@@ -73,7 +73,7 @@ git push origin v1.3.0
 
 **Result**:
 - Image tagged as: `1.3.0`, `latest`
-- Available at: `ghcr.io/jasonad123/transit-tv:latest`
+- Available at: `ghcr.io/jasonad123/headsign:latest`
 
 ### Beta Releases
 
@@ -86,7 +86,7 @@ git push origin v1.4.0-beta.1
 
 **Result**:
 - Image tagged as: `1.4.0-beta.1`, `beta`
-- Available at: `ghcr.io/jasonad123/transit-tv:beta`
+- Available at: `ghcr.io/jasonad123/headsign:beta`
 
 **Subsequent betas**: Increment the prerelease number (v1.4.0-beta.2, v1.4.0-beta.3, etc.)
 
@@ -101,7 +101,7 @@ git push origin v1.4.0-rc.1
 
 **Result**:
 - Image tagged as: `1.4.0-rc.1`, `rc`
-- Available at: `ghcr.io/jasonad123/transit-tv:rc`
+- Available at: `ghcr.io/jasonad123/headsign:rc`
 
 ### Alpha Releases
 
@@ -114,7 +114,7 @@ git push origin v1.5.0-alpha.1
 
 **Result**:
 - Image tagged as: `1.5.0-alpha.1`, `alpha`
-- Available at: `ghcr.io/jasonad123/transit-tv:alpha`
+- Available at: `ghcr.io/jasonad123/headsign:alpha`
 
 ### Edge Releases
 
@@ -122,7 +122,7 @@ Automatic edge releases are created on every push to `main` branch.
 
 **Result**:
 - Image tagged as: `edge-{short-sha}`, `edge`
-- Available at: `ghcr.io/jasonad123/transit-tv:edge`
+- Available at: `ghcr.io/jasonad123/headsign:edge`
 
 **Purpose**: Bleeding edge builds for testing latest changes before tagging a release
 
@@ -159,25 +159,25 @@ You can manually trigger docker-publish.yml from the Actions tab with these opti
 ### Latest Stable
 
 ```bash
-docker pull ghcr.io/jasonad123/transit-tv:latest
+docker pull ghcr.io/jasonad123/headsign:latest
 ```
 
 ### Specific Version
 
 ```bash
-docker pull ghcr.io/jasonad123/transit-tv:1.3.0
+docker pull ghcr.io/jasonad123/headsign:1.3.0
 ```
 
 ### Latest Beta
 
 ```bash
-docker pull ghcr.io/jasonad123/transit-tv:beta
+docker pull ghcr.io/jasonad123/headsign:beta
 ```
 
 ### Latest Edge (from main)
 
 ```bash
-docker pull ghcr.io/jasonad123/transit-tv:edge
+docker pull ghcr.io/jasonad123/headsign:edge
 ```
 
 ## Cleanup Management
@@ -240,7 +240,7 @@ Check the Actions tab for detailed logs. Common issues:
 Verify:
 - Tag name follows semantic versioning
 - Workflow completed successfully
-- Correct registry URL (`ghcr.io/jasonad123/transit-tv`)
+- Correct registry URL (`ghcr.io/jasonad123/headsign`)
 
 ### Cleanup Not Running
 

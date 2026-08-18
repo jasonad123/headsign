@@ -1,5 +1,5 @@
 /**
- * Color utility functions for Transit-TV
+ * Color utility functions for Headsign
  * Used for accessibility (WCAG contrast calculations) and theme handling
  */
 

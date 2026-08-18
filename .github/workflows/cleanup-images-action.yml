@@ -27,12 +27,12 @@ jobs:
 
     steps:
       - name: Delete old beta prerelease images
-        uses: dataaxiom/ghcr-cleanup-action@cd0cdb900b5dbf3a6f2cc869f0dbb0b8211f50c4 # v1.0.16
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           dry-run: ${{ inputs.dry_run == true }}
           keep-n-tagged: ${{ env.KEEP_PRERELEASE_COUNT }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          package: transit-tv
+          package: headsign
           owner: ${{ github.repository_owner }}
           use-regex: true
           # Delete semver beta tags (e.g., 1.2.3-beta.1) but exclude floating tag
@@ -47,12 +47,12 @@ jobs:
 
     steps:
       - name: Delete old alpha prerelease images
-        uses: dataaxiom/ghcr-cleanup-action@cd0cdb900b5dbf3a6f2cc869f0dbb0b8211f50c4 # v1.0.16
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           dry-run: ${{ inputs.dry_run == true }}
           keep-n-tagged: ${{ env.KEEP_PRERELEASE_COUNT }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          package: transit-tv
+          package: headsign
           owner: ${{ github.repository_owner }}
           use-regex: true
           # Delete semver alpha tags (e.g., 1.2.3-alpha.1) but exclude floating tag
@@ -67,12 +67,12 @@ jobs:
 
     steps:
       - name: Delete old release candidate images
-        uses: dataaxiom/ghcr-cleanup-action@cd0cdb900b5dbf3a6f2cc869f0dbb0b8211f50c4 # v1.0.16
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           dry-run: ${{ inputs.dry_run == true }}
           keep-n-tagged: ${{ env.KEEP_PRERELEASE_COUNT }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          package: transit-tv
+          package: headsign
           owner: ${{ github.repository_owner }}
           use-regex: true
           # Delete semver rc tags (e.g., 1.2.3-rc.1) but exclude floating tag
@@ -87,12 +87,12 @@ jobs:
 
     steps:
       - name: Delete branch-test images
-        uses: dataaxiom/ghcr-cleanup-action@cd0cdb900b5dbf3a6f2cc869f0dbb0b8211f50c4 # v1.0.16
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           dry-run: ${{ inputs.dry_run == true }}
           keep-n-tagged: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-          package: transit-tv
+          package: headsign
           owner: ${{ github.repository_owner }}
           use-regex: true
           # Delete all branch-test images (tags ending with 7-char SHA, excluding prereleases and hardened)
@@ -107,11 +107,11 @@ jobs:
 
     steps:
       - name: Validate multi-architecture images before orphan cleanup
-        uses: dataaxiom/ghcr-cleanup-action@cd0cdb900b5dbf3a6f2cc869f0dbb0b8211f50c4 # v1.0.16
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           validate: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          package: transit-tv
+          package: headsign
           owner: ${{ github.repository_owner }}
 
   cleanup-orphans:
@@ -122,20 +122,20 @@ jobs:
 
     steps:
       - name: Delete orphaned images
-        uses: dataaxiom/ghcr-cleanup-action@cd0cdb900b5dbf3a6f2cc869f0dbb0b8211f50c4 # v1.0.16
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           dry-run: ${{ inputs.dry_run == true }}
           delete-orphaned-images: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          package: transit-tv
+          package: headsign
           owner: ${{ github.repository_owner }}
           validate: true
       - name: Delete ghost images
-        uses: dataaxiom/ghcr-cleanup-action@cd0cdb900b5dbf3a6f2cc869f0dbb0b8211f50c4 # v1.0.16
+        uses: dataaxiom/ghcr-cleanup-action@d52806a0dc70b430571a37da1fde39733ffd640f # v1.2.2
         with:
           dry-run: ${{ inputs.dry_run == true }}
           delete-ghost-images: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          package: transit-tv
+          package: headsign
           owner: ${{ github.repository_owner }}
           validate: true

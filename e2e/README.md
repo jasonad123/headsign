@@ -1,6 +1,6 @@
 # End-to-End Tests
 
-This directory contains Playwright-based E2E tests for Transit TV.
+This directory contains Playwright-based E2E tests for Headsign.
 
 ## Test Coverage
 

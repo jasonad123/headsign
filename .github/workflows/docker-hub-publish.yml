@@ -20,9 +20,9 @@ on:
         type: string
 
 env:
-  IMAGE_NAME: jasonad123/transit-tv
+  IMAGE_NAME: jasonad123/headsign
   IMAGE_USERNAME: jasonad123
-  IMAGE_IMGNAME: transit-tv
+  IMAGE_IMGNAME: headsign
 
 jobs:
   build-and-push:
@@ -45,19 +45,19 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4
 
       - name: Load secrets from 1Password
-        uses: 1Password/load-secrets-action/configure@92467eb28f72e8255933372f1e0707c567ce2259 # v4.0.0
+        uses: 1Password/load-secrets-action/configure@eb2efd0703da22a93c467f2d1ffbb6826c11e19c # v4.1.1
         with:
           service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
 
       - name: Load Docker credentials
         id: load-docker-credentials
-        uses: 1password/load-secrets-action@92467eb28f72e8255933372f1e0707c567ce2259 # v4.0.0
+        uses: 1password/load-secrets-action@eb2efd0703da22a93c467f2d1ffbb6826c11e19c # v4.1.1
         with:
           export-env: false
         env:
@@ -65,16 +65,16 @@ jobs:
           DOCKERHUB_TOKEN: "op://Developer/docker-gh/credential"
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4
         with:
           username: ${{ steps.load-docker-credentials.outputs.DOCKERHUB_USERNAME }}
           password: ${{ steps.load-docker-credentials.outputs.DOCKERHUB_TOKEN }}
           
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
+        uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8 # v4.2.0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
 
       - name: Extract version info
         id: version
@@ -142,7 +142,7 @@ jobs:
       - name: Extract metadata and generate tags
         if: steps.should_continue.outputs.continue == 'true'
         id: meta
-        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6
         with:
           images: ${{ env.IMAGE_NAME }}
           # Standard tagging (No "-hardened" suffix)
@@ -162,9 +162,9 @@ jobs:
             # Manual
             type=raw,value=${{ steps.version.outputs.version }},enable=${{ steps.version.outputs.is_tag == 'false' }}
           labels: |
-            org.opencontainers.image.title=Transit-TV
-            org.opencontainers.image.description=Transit TV is an app that uses the Transit App API to show arrival times for nearby public transit.
-            org.opencontainers.image.authors=Transit-TV Contributors
+            org.opencontainers.image.title=Headsign
+            org.opencontainers.image.description=Headsign is an app that uses the Transit API to show arrival times for nearby public transit.
+            org.opencontainers.image.authors=Headsign Contributors
             org.opencontainers.image.url=https://hub.docker.com/r/${{ env.IMAGE_USERNAME }}/${{ env.IMAGE_IMGNAME }}
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
             org.opencontainers.image.version=${{ steps.version.outputs.version }}
@@ -174,7 +174,7 @@ jobs:
       - name: Build and push Docker image
         if: steps.should_continue.outputs.continue == 'true'
         id: build
-        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
         with:
           context: .
           platforms: linux/amd64,linux/arm64

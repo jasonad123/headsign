@@ -1,9 +1,9 @@
 # Docker Deployment
 
-This documentation walks through how to deploy Transit TV using Docker and using the project's Dockerfiles.
+This documentation walks through how to deploy Headsign using Docker and using the project's Dockerfiles.
 
 > [!TIP]
-> For most users, you should be fine to just use the prebuilt Docker images available on [Docker Hub](https://hub.docker.com/r/jasonad123/transit-tv) or the [project's package page](https://github.com/jasonad123/Transit-TV/pkgs/container/transit-tv). These instructions are for individuals/organizations who prefer to build and/or need to build from Dockerfiles on their own.
+> For most users, you should be fine to just use the prebuilt Docker images available on [Docker Hub](https://hub.docker.com/r/jasonad123/headsign) or the [project's package page](https://github.com/jasonad123/headsign/pkgs/container/headsign). These instructions are for individuals/organizations who prefer to build and/or need to build from Dockerfiles on their own.
 
 ## Included Dockerfiles
 
@@ -29,8 +29,8 @@ These instructions assume you've followed steps 1 and 2 in the Docker section in
 
 ```bash
 # clone the repository
-git clone https://github.com/jasonad123/Transit-TV.git
-cd transit-tv
+git clone https://github.com/jasonad123/headsign.git
+cd headsign
 
 # copy the .env.example file
 cp .env.example .env
@@ -73,5 +73,5 @@ docker compose down --remove-orphans
 docker build -f Dockerfile .
 
 # Run the container
-docker run -p 8080:8080 --env-file .env transit-tv-svelte
+docker run -p 8080:8080 --env-file .env headsign-svelte
 ```

@@ -1,6 +1,6 @@
 # Getting started
 
-Transit TV is a web application that can be deployed in various ways to suit different organizational needs and technical capabilities. This guide walks through the available deployment options, from simplest to most complex.
+Headsign is a web application that can be deployed in various ways to suit different organizational needs and technical capabilities. This guide walks through the available deployment options, from simplest to most complex.
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@ Regardless of deployment method, you'll need an API key from Transit:
 
 ### Display Hardware
 
-You'll need display hardware to show the Transit TV interface. Options range from:
+You'll need display hardware to show the Headsign interface. Options range from:
 
 - Simple: Monitor connected to a PC or mini-PC
 - Moderate: Raspberry Pi with display
@@ -35,10 +35,10 @@ Railway provides a one-click deployment experience:
 **What happens when you click**:
 
 1. You'll be guided through creating a Railway account (if needed)
-2. You'll configure your API key and settings for Transit TV
-3. Railway creates a new project for Transit TV
-4. Railway automatically deploys the _latest_ Docker image for Transit TV
-5. Your Transit TV instance is live
+2. You'll configure your API key and settings for Headsign
+3. Railway creates a new project for Headsign
+4. Railway automatically deploys the _latest_ Docker image for Headsign
+5. Your Headsign instance is live
 
 **Configuration**:
 
@@ -48,21 +48,21 @@ Railway provides a one-click deployment experience:
 
 **Costs**: Railway charges based on usage. Check [Railway's pricing](https://railway.com/pricing) for current rates.
 
-**Demo instance**: [see it in action](https://transit-tv-demo.up.railway.app/)
+**Demo instance**: [see it in action](https://headsign-demo.up.railway.app/)
 
 ### Option 1B: One-Click Deployment (Render)
 
 **Best for**: Organizations comfortable with cloud PaaS platforms and specifically familiar with Render
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2Fjasonad123%2FTransit-TV)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2Fjasonad123%2Fheadsign)
 
 **What happens when you click**:
 
 1. You'll be guided through creating a Render account (if needed)
-2. You'll configure your API key and basic settings for Transit TV
-3. Render creates a new project for Transit TV
-4. Render automatically deploys the _latest_ Docker image for Transit TV as a Web Service
-5. Your Transit TV instance is live
+2. You'll configure your API key and basic settings for Headsign
+3. Render creates a new project for Headsign
+4. Render automatically deploys the _latest_ Docker image for Headsign as a Web Service
+5. Your Headsign instance is live
 
 **Configuration**:
 
@@ -74,7 +74,7 @@ Railway provides a one-click deployment experience:
 
 **Best for**: Organizations preferring other PaaS providers or needing specific features
 
-Transit TV works with any Docker-compatible PaaS platform. Currently it has only been tested and deployed on Railway and has had test deployments on **Render** and _should_ be supported by **Fly.io**.
+Headsign works with any Docker-compatible PaaS platform. Currently it has only been tested and deployed on Railway and has had test deployments on **Render** and _should_ be supported by **Fly.io**.
 
 - **Railway** - Recommended, full template support
 - **Render** - Good alternative, straightforward setup with template support
@@ -85,8 +85,8 @@ Transit TV works with any Docker-compatible PaaS platform. Currently it has only
 1. **Create account** on your chosen platform
 2. **Create new service** from Docker image
 3. **Configure Docker image**:
-   - Docker Hub: `jasonad123/transit-tv`
-     - Alternative: GitHub repository: `ghcr.io/jasonad123/transit-tv` (this is also the _only_ option for pre-release images)
+   - Docker Hub: `jasonad123/headsign`
+     - Alternative: GitHub repository: `ghcr.io/jasonad123/headsign` (this is also the _only_ option for pre-release images)
    - Tag: `latest` (for stable) or specific version tag
 4. **Set environment variables**:
    ```bash
@@ -106,10 +106,10 @@ Transit TV works with any Docker-compatible PaaS platform. Currently it has only
 # render.yaml
 services:
   - type: web
-    name: Transit-TV
+    name: Headsign
     runtime: docker
     image:
-      url: ghcr.io/jasonad123/transit-tv:latest
+      url: ghcr.io/jasonad123/headsign:latest
     envVars:
       - key: TRANSIT_API_KEY
         sync: false
@@ -127,7 +127,7 @@ services:
 
 ```toml
 # fly.toml
-app = "your-transit-tv"
+app = "your-headsign"
 
 [env]
   PORT = "8080"
@@ -181,9 +181,9 @@ app = "your-transit-tv"
 2. **Create environment file**:
 
    ```bash
-   # Create a directory for Transit-TV
-   mkdir -p ~/transit-tv
-   cd ~/transit-tv
+   # Create a directory for Headsign
+   mkdir -p ~/headsign
+   cd ~/headsign
 
    # Create .env file
    cat > .env << EOF
@@ -198,18 +198,18 @@ app = "your-transit-tv"
 
    ```bash
    # Pull the latest image from Docker Hub
-   docker pull jasonad123/transit-tv:latest
+   docker pull jasonad123/headsign:latest
 
    # OR pull the latest image from GitHub
-   # docker pull ghcr.io/jasonad123/transit-tv:latest
+   # docker pull ghcr.io/jasonad123/headsign:latest
 
    # Run the container
    docker run -d \
-     --name transit-tv \
+     --name headsign \
      --restart unless-stopped \
      -p 8080:8080 \
      --env-file .env \
-     jasonad123/transit-tv:latest
+     jasonad123/headsign:latest
    ```
 
 4. **Verify deployment**:
@@ -219,7 +219,7 @@ app = "your-transit-tv"
    docker ps
 
    # View logs
-   docker logs transit-tv
+   docker logs headsign
    ```
 
 5. **Access your instance**:
@@ -234,9 +234,9 @@ For easier management, use Docker Compose:
 
    ```yaml
    services:
-     transit-tv:
-       image: jasonad123/transit-tv:latest
-       container_name: transit-tv
+     headsign:
+       image: jasonad123/headsign:latest
+       container_name: headsign
        restart: unless-stopped
        ports:
          - '8080:8080'
@@ -275,7 +275,7 @@ For SSL/TLS and custom domains, use a reverse proxy like Nginx or Caddy:
 **Caddy** (easiest, automatic HTTPS):
 
 ```caddy
-transit-tv.youragency.com {
+headsign.youragency.com {
     reverse_proxy localhost:8080
 }
 ```
@@ -285,7 +285,7 @@ transit-tv.youragency.com {
 ```nginx
 server {
     listen 80;
-    server_name transit-tv.youragency.com;
+    server_name headsign.youragency.com;
 
     location / {
         proxy_pass http://localhost:8080;
@@ -300,14 +300,14 @@ server {
 
 #### Reverse proxy alternatives
 
-Transit TV has been tested to work behind both **Cloudflare Tunnels** and **Tailscale** (both natively and behind Tailscale Funnels). If your organization uses either of these programs, consider these as reverse proxy alternatives that don't
+Headsign has been tested to work behind both **Cloudflare Tunnels** and **Tailscale** (both natively and behind Tailscale Funnels). If your organization uses either of these programs, consider these as reverse proxy alternatives that don't
 require opening ports.
 
 ### Option 4: Direct Node.js Deployment (Development Only)
 
 > [!CAUTION]
 > This method is **not recommended** for production deployments. Use Docker or a PaaS platform instead.
-> **Only use this if** you're actively developing Transit TV or need to make custom modifications.
+> **Only use this if** you're actively developing Headsign or need to make custom modifications.
 
 See [docs/local-deployment](/docs/local-deployment.md) for more information.
 
@@ -315,13 +315,13 @@ See [docs/local-deployment](/docs/local-deployment.md) for more information.
 
 ### Unattended Setup
 
-Transit TV supports automatic configuration on first launch, ideal for deploying multiple instances at once.
+Headsign supports automatic configuration on first launch, ideal for deploying multiple instances at once.
 
 See the documentation for [unattended setup](../docs/config/unattended-setup.md)] for more information on available variables.
 
 ### Caching
 
-Transit TV also has built-in caching. Caching can be adjusted based on your Transit API subscription.
+Headsign also has built-in caching. Caching can be adjusted based on your Transit API subscription.
 
 See the documentation for [caching](../docs/config/caching.md)] for more information on the caching setup.
 
@@ -348,21 +348,21 @@ docker compose up -d
 
 ```bash
 # Pull latest image
-docker pull jasonad123/transit-tv:latest
+docker pull jasonad123/headsign:latest
 
 # Stop and remove old container
-docker stop transit-tv
-docker rm transit-tv
+docker stop headsign
+docker rm headsign
 
 # Start new container (using same command as initial deployment)
-docker run -d --name transit-tv --restart unless-stopped -p 8080:8080 --env-file .env jasonad123/transit-tv:latest
+docker run -d --name headsign --restart unless-stopped -p 8080:8080 --env-file .env jasonad123/headsign:latest
 ```
 
 ## Monitoring and Maintenance
 
 ### Health Checks
 
-Transit-TV exposes a health check endpoint at `/health` that returns:
+Headsign exposes a health check endpoint at `/health` that returns:
 
 ```json
 {
@@ -385,13 +385,13 @@ Use this for monitoring:
 
 ```bash
 # View logs
-docker logs transit-tv
+docker logs headsign
 
 # Follow logs in real-time
-docker logs -f transit-tv
+docker logs -f headsign
 
 # Last 100 lines
-docker logs --tail 100 transit-tv
+docker logs --tail 100 headsign
 ```
 
 **Docker Compose**:
@@ -419,7 +419,7 @@ docker compose logs -f
 1. **Container not starting**:
 
    ```bash
-   docker logs transit-tv
+   docker logs headsign
    ```
 
 2. **API key issues**:
@@ -439,7 +439,7 @@ docker compose logs -f
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/jasonad123/Transit-TV/issues)
+- **Issues**: [GitHub Issues](https://github.com/jasonad123/headsign/issues)
 
 ---
 

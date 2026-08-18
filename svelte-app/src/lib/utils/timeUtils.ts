@@ -1,5 +1,5 @@
 /**
- * Time-related utility functions for Transit-TV
+ * Time-related utility functions for Headsign
  */
 
 /**

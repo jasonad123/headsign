@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { _ } from 'svelte-i18n';
+	import { t } from '$lib/i18n';
 	import type { OccupancyStatus } from '$lib/services/nearby';
 
 	let { level }: { level?: OccupancyStatus | null } = $props();
@@ -7,9 +7,9 @@
 	let filledCount = $derived(level ?? 0);
 
 	let ariaLabel = $derived.by(() => {
-		if (level === 1) return $_('aria.crowding.notCrowded');
-		if (level === 2) return $_('aria.crowding.someCrowding');
-		if (level === 3) return $_('aria.crowding.crowded');
+		if (level === 1) return t('aria.crowding.notCrowded');
+		if (level === 2) return t('aria.crowding.someCrowding');
+		if (level === 3) return t('aria.crowding.crowded');
 		return '';
 	});
 </script>
@@ -17,10 +17,7 @@
 {#if level != null && level >= 1 && level <= 3}
 	<span class="crowding-badge" aria-label={ariaLabel} title={ariaLabel}>
 		{#each [1, 2, 3] as i (i)}
-			<iconify-icon
-				icon="mdi:account"
-				class="crowding-person"
-				class:filled={i <= filledCount}
+			<iconify-icon icon="mdi:account" class="crowding-person" class:filled={i <= filledCount}
 			></iconify-icon>
 		{/each}
 	</span>

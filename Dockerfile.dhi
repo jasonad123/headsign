@@ -12,7 +12,7 @@
 # - Docker Hub authentication: docker login dhi.io
 # - Use your Docker Hub credentials
 #
-# To build: docker build -f Dockerfile.dhi -t transit-tv:dhi .
+# To build: docker build -f Dockerfile.dhi -t headsign:dhi .
 # ==============================================================================
 
 # Builder stage - use -dev variant for build tools

@@ -61,7 +61,7 @@ body:
     id: deployment
     attributes:
       label: Deployment Method
-      description: How are you running Transit-TV?
+      description: How are you running Headsign?
       options:
         - Docker container
         - Local development (pnpm dev)
@@ -122,5 +122,5 @@ body:
           required: true
         - label: I have provided all requested information above
           required: true
-        - label: I am using the latest version of Transit-TV (or have specified my version)
+        - label: I am using the latest version of Headsign (or have specified my version)
           required: true

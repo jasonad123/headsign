@@ -1,10 +1,10 @@
-# Render Blueprint for Transit TV - use this to jumpstart an instance on Render
+# Render Blueprint for Headsign - use this to jumpstart an instance on Render
 services:
   - type: web
-    name: Transit-TV
+    name: Headsign
     runtime: image
     image:
-      url: ghcr.io/jasonad123/transit-tv:latest
+      url: ghcr.io/jasonad123/headsign:latest
     envVars:
       - key: TRANSIT_API_KEY
         sync: false

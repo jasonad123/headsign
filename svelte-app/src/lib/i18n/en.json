@@ -1,10 +1,10 @@
 {
 	"app": {
-		"title": "Transit TV",
+		"title": "Headsign",
 		"nearbyRoutes": "Nearby Routes"
 	},
 	"config": {
-		"title": "Configure Transit TV",
+		"title": "Configure Headsign",
 		"sections": {
 			"display": "Display settings",
 			"style": "Style",
@@ -43,8 +43,9 @@
 			"auto": "Auto",
 			"manualColumnControl": "Manual column control",
 			"automaticColumnControl": "Using automatic column layout",
-			"word": "{count, plural, one {1 column} other {{count} columns}}",
-			"columnWarning": "Columns may be too narrow at this screen width ({nomColWidth}px per column)",
+			"word_one": "1 column",
+			"word_other": "{{count}} columns",
+			"columnWarning": "Columns may be too narrow at this screen width ({{nomColWidth}}px per column)",
 			"disabledInVerticalMode": "Column controls are not used in Vertical mode"
 		},
 		"theme": {
@@ -116,7 +117,7 @@
 		},
 		"location": {
 			"validating": "Checking location...",
-			"validationSuccess": "Location set - {count} route{plural} found nearby",
+			"validationSuccess": "Location set - {{count}} route{{plural}} found nearby",
 			"validationNoRoutes": "No routes found at this location",
 			"validationError": "Unable to validate location",
 			"geolocationNotSupported": "Geolocation is not supported by your browser",
@@ -135,10 +136,10 @@
 			}
 		},
 		"credits": {
-			"version": "Transit TV version <a href=\"https://github.com/jasonad123/Transit-TV/releases\" target=\"_blank\" rel=\"noopener\"></a>",
+			"version": "Headsign version <a href=\"https://github.com/jasonad123/headsign/releases\" target=\"_blank\" rel=\"noopener\"></a>",
 			"title": "Credits",
 			"madeWith": "Made with <iconify-icon icon=\"ix:heart-filled\" style=\"color: #e30022; vertical-align: -0.1em;\"></iconify-icon> in Washington, DC by Jason A </br> Originally developed by <a href=\"https://transitapp.com/\" target=\"_blank\" rel=\"noopener\">Transit</a> in <iconify-icon icon=\"fluent-emoji-flat:maple-leaf\" style=\"color: #b53054; vertical-align: -0.2em;\"></iconify-icon> Montreal, QC",
-			"links": "<a href=\"https://github.com/jasonad123/Transit-TV\" target=\"_blank\" rel=\"noopener\">View on GitHub</a> &vert; Powered by the Transit API"
+			"links": "<a href=\"https://github.com/jasonad123/headsign\" target=\"_blank\" rel=\"noopener\">View on GitHub</a> &vert; Powered by the Transit API"
 		}
 	},
 	"routes": {
@@ -172,7 +173,7 @@
 	},
 	"stops": {
 		"distance": {
-			"away": "{distance} away"
+			"away": "{{distance}} away"
 		}
 	},
 	"alerts": {
@@ -194,10 +195,10 @@
 		"developerMessage": "Developers: use toggleWidthCheck() in the console to disable this message"
 	},
 	"errors": {
-		"rateLimit": "Checking for updates. Retrying in {seconds} seconds...",
+		"rateLimit": "Checking for updates. Retrying in {{seconds}} seconds...",
 		"auth": "Can't connect to the Transit API.",
 		"timeout": "Checking for updates..",
-		"backend": "Transit TV is out of service. Retrying...",
-		"generic": "Transit TV ran into a problem. Retrying..."
+		"backend": "Headsign is out of service. Retrying...",
+		"generic": "Headsign ran into a problem. Retrying..."
 	}
 }

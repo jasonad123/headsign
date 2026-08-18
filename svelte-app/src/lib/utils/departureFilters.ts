@@ -1,5 +1,5 @@
 /**
- * Departure filtering utilities for Transit-TV
+ * Departure filtering utilities for Headsign
  */
 
 import type { ScheduleItem } from '$lib/services/nearby';
