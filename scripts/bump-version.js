@@ -8,7 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const TARGETS = [path.join(ROOT, 'package.json'), path.join(ROOT, 'svelte-app', 'package.json')];
@@ -37,8 +37,8 @@ function nextVersion(current, bump) {
 	return bump;
 }
 
-function run(cmd) {
-	execSync(cmd, { cwd: ROOT, stdio: 'inherit' });
+function run(command, args) {
+	execFileSync(command, args, { cwd: ROOT, stdio: 'inherit' });
 }
 
 function main() {
@@ -70,17 +70,18 @@ function main() {
 	}
 
 	if (shouldCommit) {
-		const relTargets = TARGETS.map((f) => path.relative(ROOT, f)).join(' ');
-		run(`git add ${relTargets}`);
-		run(`git commit -m "chore: bump version to ${newVersion}"`);
+		const relTargets = TARGETS.map((f) => path.relative(ROOT, f));
+		run('git', ['add', ...relTargets]);
+		run('git', ['commit', '-m', `chore: bump version to ${newVersion}`]);
 	}
 
 	if (shouldTag) {
-		run(`git tag v${newVersion}`);
+		run('git', ['tag', `v${newVersion}`]);
 	}
 
 	if (shouldPush) {
-		run(`git push && git push origin v${newVersion}`);
+		run('git', ['push']);
+		run('git', ['push', 'origin', `v${newVersion}`]);
 	}
 
 	console.log(`\nVersion bumped to ${newVersion}.`);
