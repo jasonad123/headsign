@@ -41,6 +41,11 @@ function run(command, args) {
 	execFileSync(command, args, { cwd: ROOT, stdio: 'inherit' });
 }
 
+function detectIndent(raw) {
+	const match = /\n([ \t]+)\S/.exec(raw);
+	return match ? match[1] : '\t';
+}
+
 function main() {
 	const args = process.argv.slice(2);
 	const bumpArg = args.find((a) => !a.startsWith('--'));
@@ -60,12 +65,13 @@ function main() {
 	}
 
 	for (const file of TARGETS) {
-		const json = JSON.parse(fs.readFileSync(file, 'utf8'));
+		const raw = fs.readFileSync(file, 'utf8');
+		const json = JSON.parse(raw);
 		if (json.version !== currentVersion) {
 			console.warn(`Warning: ${path.relative(ROOT, file)} was at ${json.version}, expected ${currentVersion}.`);
 		}
 		json.version = newVersion;
-		fs.writeFileSync(file, JSON.stringify(json, null, '\t') + '\n');
+		fs.writeFileSync(file, JSON.stringify(json, null, detectIndent(raw)) + '\n');
 		console.log(`Updated ${path.relative(ROOT, file)}: ${currentVersion} -> ${newVersion}`);
 	}
 
