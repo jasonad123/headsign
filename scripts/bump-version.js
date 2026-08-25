@@ -12,6 +12,7 @@ const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const TARGETS = [path.join(ROOT, 'package.json'), path.join(ROOT, 'svelte-app', 'package.json')];
+const SVELTE_PAGE = path.join(ROOT, 'svelte-app', 'src', 'routes', '+page.svelte');
 
 function usageError(message) {
 	console.error(message);
@@ -75,8 +76,18 @@ function main() {
 		console.log(`Updated ${path.relative(ROOT, file)}: ${currentVersion} -> ${newVersion}`);
 	}
 
+	const pageRaw = fs.readFileSync(SVELTE_PAGE, 'utf8');
+	const pageMatches = pageRaw.split(`'${currentVersion}'`).length - 1;
+	if (pageMatches !== 2) {
+		console.warn(
+			`Warning: expected 2 occurrences of '${currentVersion}' in ${path.relative(ROOT, SVELTE_PAGE)}, found ${pageMatches}.`
+		);
+	}
+	fs.writeFileSync(SVELTE_PAGE, pageRaw.split(`'${currentVersion}'`).join(`'${newVersion}'`));
+	console.log(`Updated ${path.relative(ROOT, SVELTE_PAGE)}: ${currentVersion} -> ${newVersion}`);
+
 	if (shouldCommit) {
-		const relTargets = TARGETS.map((f) => path.relative(ROOT, f));
+		const relTargets = [...TARGETS, SVELTE_PAGE].map((f) => path.relative(ROOT, f));
 		run('git', ['add', ...relTargets]);
 		run('git', ['commit', '-m', `chore: bump version to ${newVersion}`]);
 	}
