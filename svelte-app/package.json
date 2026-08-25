@@ -15,16 +15,17 @@
 	},
 	"devDependencies": {
 		"@svelte-put/qr": "^2.1.2",
-		"@sveltejs/adapter-node": "^5.5.4",
-		"@sveltejs/kit": "^2.61.1",
+		"@sveltejs/adapter-node": "^5.5.7",
+		"@sveltejs/kit": "^2.70.3",
 		"@sveltejs/vite-plugin-svelte": "^7.0.0",
 		"@types/node": "^24.12.2",
 		"iconify-icon": "^3.0.2",
 		"svelte": "^5.55.9",
-		"svelte-check": "^4.4.6",
-		"typescript": "^5.9.3",
-		"vite": "^8.0.5"
+		"svelte-check": "^4.7.6",
+		"typescript": "^6.0.3",
+		"vite": "^8.2.2"
 	},
+	"packageManager": "pnpm@11.24.0",
 	"dependencies": {
 		"@fontsource-variable/overpass": "^5.2.8",
 		"@fontsource-variable/red-hat-display": "^5.2.8",
