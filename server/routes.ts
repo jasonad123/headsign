@@ -1,20 +1,35 @@
-'use strict';
+import { Application, Request, Response, NextFunction, RequestHandler } from 'express';
+import fs from 'fs';
+import errors from './components/errors/index.js';
+import path from 'path';
+import config from './config/environment/index.js';
+import logger from './config/logger.js';
+import imageRoutes from './api/image/index.js';
+import transitRoutes from './api/routes/index.js';
+import vehiclesRoutes from './api/vehicles/index.js';
+import configRoutes from './api/config/index.js';
 
-var errors = require('./components/errors');
-var path = require('path');
-var config = require('./config/environment');
-var logger = require('./config/logger');
-var packageJson = require('../package.json');
+const pkgPath = path.join(__dirname, '../package.json');
+const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8')) as { version: string };
 
-module.exports = function (app) {
+interface SvelteKitHandler {
+	(req: Request, res: Response, next: NextFunction): void;
+}
+
+interface SvelteKitModule {
+	handler: SvelteKitHandler;
+}
+
+export default function setupRoutes(app: Application): void {
 	// Insert routes below
-	app.use('/api/images', require('./api/image'));
-	app.use('/api/routes', require('./api/routes'));
-	app.use('/api/config', require('./api/config'));
+	app.use('/api/images', imageRoutes);
+	app.use('/api/routes', transitRoutes);
+	app.use('/api/vehicles', vehiclesRoutes);
+	app.use('/api/config', configRoutes);
 
 	// Health check endpoint for monitoring and orchestration
 	// Always allow CORS for health endpoint to support dev mode version fetching
-	app.get('/health', function (req, res) {
+	app.get('/health', (req: Request, res: Response) => {
 		// Allow cross-origin requests for health check (always, even in production)
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -22,7 +37,7 @@ module.exports = function (app) {
 		res.status(200).json({
 			status: 'healthy',
 			timestamp: new Date().toISOString(),
-			version: packageJson.version,
+			version: pkg.version,
 			uptime: process.uptime(),
 			environment: process.env.NODE_ENV || 'development'
 		});
@@ -31,21 +46,21 @@ module.exports = function (app) {
 	// All undefined asset or api routes should return a 404
 	app.get(
 		['/api/*splat', '/auth/*splat', '/components/*splat', '/app/*splat', '/assets/*splat'],
-		errors[404]
+		errors[404] as RequestHandler
 	);
 
 	// SvelteKit handler for all other routes
-	var buildPath = path.join(config.root, 'svelte-app/build');
-	var handlerPath = buildPath + '/handler.js';
+	const buildPath = path.join(config.root, 'svelte-app/build');
+	const handlerPath = buildPath + '/handler.js';
 
 	logger.info({ path: buildPath }, 'Loading SvelteKit handler');
 
 	// Load handler once and cache it
-	var handlerCache = null;
-	var handlerLoadError = null;
+	let handlerCache: SvelteKitHandler | null = null;
+	let handlerLoadError: Error | null = null;
 
 	// Middleware that loads handler on first request or retries if failed
-	app.use(function (req, res, next) {
+	app.use((req: Request, res: Response, next: NextFunction) => {
 		// If handler is already loaded, use it
 		if (handlerCache) {
 			return handlerCache(req, res, next);
@@ -62,14 +77,14 @@ module.exports = function (app) {
 
 		// Load handler on first request
 		import(handlerPath)
-			.then(function (module) {
+			.then((module: SvelteKitModule) => {
 				logger.info('SvelteKit handler loaded successfully');
 				handlerCache = module.handler;
 				handlerCache(req, res, next);
 			})
-			.catch(function (err) {
+			.catch((err: Error) => {
 				logger.error(
-					{ err: err },
+					{ err },
 					'Failed to load SvelteKit handler - run: cd svelte-app && pnpm build'
 				);
 				handlerLoadError = err;
@@ -79,4 +94,4 @@ module.exports = function (app) {
 				});
 			});
 	});
-};
+}

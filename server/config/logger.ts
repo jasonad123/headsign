@@ -3,13 +3,17 @@
  * Provides production-ready JSON logging with development-friendly formatting
  */
 
-const pino = require('pino');
-const pkg = require('../../package.json');
+import pino, { LoggerOptions, TransportTargetOptions } from 'pino';
+import fs from 'fs';
+import path from 'path';
+
+const pkgPath = path.join(__dirname, '../../package.json');
+const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8')) as { version: string };
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // Create base logger configuration
-const loggerConfig = {
+const loggerConfig: LoggerOptions = {
 	// Log level from environment or defaults
 	level: process.env.LOG_LEVEL || (isDevelopment ? 'debug' : 'info'),
 
@@ -74,7 +78,7 @@ if (isDevelopment) {
 			ignore: 'pid,hostname',
 			levelFirst: true
 		}
-	};
+	} as TransportTargetOptions;
 }
 
 // Create logger instance
@@ -82,7 +86,7 @@ const logger = pino(loggerConfig);
 
 // Export both the logger and the base config (without transport) for pino-http
 // pino-http needs a non-transported logger to work properly
-const baseConfig = {
+export const baseConfig: LoggerOptions = {
 	level: loggerConfig.level,
 	timestamp: loggerConfig.timestamp,
 	base: loggerConfig.base,
@@ -90,6 +94,5 @@ const baseConfig = {
 	serializers: loggerConfig.serializers
 };
 
-module.exports = logger;
-module.exports.baseConfig = baseConfig;
-module.exports.isDevelopment = isDevelopment;
+export { isDevelopment };
+export default logger;

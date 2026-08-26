@@ -38,6 +38,9 @@ WORKDIR /app
 COPY svelte-app ./svelte-app
 COPY server ./server
 
+# Build the TypeScript server
+RUN pnpm run build:server
+
 # Build the SvelteKit application
 RUN cd svelte-app && pnpm run build
 
@@ -55,7 +58,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 # Copy only what's needed for runtime
 # Note: svelte-app/package.json NOT needed - build output is self-contained
 COPY --from=builder /app/svelte-app/build ./svelte-app/build
-COPY --from=builder /app/server ./server
+COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
@@ -79,4 +82,4 @@ USER node
 
 # Start with heap size limit to prevent OOM with 512MB container limit
 # Heap: 400MB, leaves ~112MB for V8 overhead, buffers, and OS
-CMD ["node", "--max-old-space-size=400", "server/app.js"]
+CMD ["node", "--max-old-space-size=400", "dist/app.js"]

@@ -1,19 +1,36 @@
-'use strict';
+import { Request, Response } from 'express';
+import type { Logger } from 'pino';
+
+interface RequestWithLog extends Request {
+	log: Logger;
+}
+
+function handleError(
+	req: RequestWithLog,
+	res: Response,
+	err: string,
+	statusCode?: number
+): Response {
+	req.log.error({ error: err, statusCode: statusCode || 500 }, 'Image API error');
+	return res.status(statusCode || 500).json({ error: err });
+}
 
 // Get one image
-exports.show = async function (req, res) {
+export async function show(req: Request, res: Response): Promise<Response | void> {
+	const reqWithLog = req as RequestWithLog;
+
 	// Validate input parameters
 	if (!req.params.id) {
 		return res.status(400).json({ error: 'Image ID is required' });
 	}
 
-	var imageName = req.params.id,
-		primaryColor = req.query.primaryColor || '010101',
-		secondaryColor = req.query.secondaryColor || 'FEFEFE';
+	const imageName = String(req.params.id);
+	const primaryColor = String(req.query.primaryColor || '010101');
+	const secondaryColor = String(req.query.secondaryColor || 'FEFEFE');
 
 	// Validate imageName to prevent SSRF and path traversal
 	// Only allow alphanumeric, underscore, hyphen, must start with a letter/number, no path traversal, max length 68.
-	var imageNameRegex = /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}(\.svg)?$/;
+	const imageNameRegex = /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}(\.svg)?$/;
 	if (!imageNameRegex.test(imageName)) {
 		return res.status(400).json({
 			error:
@@ -22,16 +39,16 @@ exports.show = async function (req, res) {
 	}
 
 	// Validate color format (should be a valid hex color without the # prefix)
-	var hexColorRegex = /^[0-9A-Fa-f]{6}$/;
+	const hexColorRegex = /^[0-9A-Fa-f]{6}$/;
 	if (!hexColorRegex.test(primaryColor) || !hexColorRegex.test(secondaryColor)) {
 		return res.status(400).json({
 			error: 'Invalid color format. Colors must be 6-character hex values without the # prefix'
 		});
 	}
 
-	var suffix = primaryColor === '000000' ? '-mono' : '-color-light',
-		filename = imageName.replace('.svg', '') + suffix + '.svg',
-		url = 'https://transitapp-data.com/images/svgx/' + filename;
+	const suffix = primaryColor === '000000' ? '-mono' : '-color-light';
+	const filename = imageName.replace('.svg', '') + suffix + '.svg';
+	const url = 'https://transitapp-data.com/images/svgx/' + filename;
 
 	try {
 		const response = await fetch(url, {
@@ -39,7 +56,7 @@ exports.show = async function (req, res) {
 		});
 
 		if (!response.ok) {
-			req.log.error(
+			reqWithLog.log.error(
 				{
 					api: 'image',
 					status: response.status,
@@ -48,13 +65,13 @@ exports.show = async function (req, res) {
 				},
 				'Error response from image API'
 			);
-			return handleError(req, res, 'Image not found or unavailable', response.status);
+			return handleError(reqWithLog, res, 'Image not found or unavailable', response.status);
 		}
 
 		let data = await response.text();
 
 		if (!data) {
-			return handleError(req, res, 'Empty response from image server');
+			return handleError(reqWithLog, res, 'Empty response from image server');
 		}
 
 		try {
@@ -62,8 +79,8 @@ exports.show = async function (req, res) {
 				.replace(new RegExp(`#010101`, 'gi'), `#${primaryColor}`)
 				.replace(new RegExp(`#FEFEFE`, 'gi'), `#${secondaryColor}`);
 		} catch (err) {
-			req.log.error({ err: err, imageName: imageName }, 'Error processing image data');
-			return handleError(req, res, 'Failed to process image data');
+			reqWithLog.log.error({ err, imageName }, 'Error processing image data');
+			return handleError(reqWithLog, res, 'Failed to process image data');
 		}
 
 		// Set content type for SVG
@@ -73,12 +90,7 @@ exports.show = async function (req, res) {
 			.set('Cache-Control', 'public, max-age=86400')
 			.send(data);
 	} catch (err) {
-		req.log.error({ err: err, url: url, imageName: imageName }, 'Error fetching image');
-		return handleError(req, res, 'Failed to fetch image');
+		reqWithLog.log.error({ err, url, imageName }, 'Error fetching image');
+		return handleError(reqWithLog, res, 'Failed to fetch image');
 	}
-};
-
-function handleError(req, res, err, statusCode) {
-	req.log.error({ error: err, statusCode: statusCode || 500 }, 'Image API error');
-	return res.status(statusCode || 500).json({ error: err });
 }

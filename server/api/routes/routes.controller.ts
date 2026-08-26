@@ -1,16 +1,66 @@
-'use strict';
+import { Request, Response } from 'express';
+import type { Logger } from 'pino';
+import { parseBoolean } from '../../config/environment/index.js';
 
-const config = require('../../config/environment');
+interface RequestWithLog extends Request {
+	log: Logger;
+}
+
+interface Stop {
+	stop_lat: number;
+	stop_lon: number;
+	[key: string]: unknown;
+}
+
+interface ScheduleItem {
+	is_real_time?: boolean;
+	internal_itinerary_id?: string;
+	[key: string]: unknown;
+}
+
+interface Itinerary {
+	internal_itinerary_id?: string;
+	closest_stop?: Stop;
+	schedule_items?: ScheduleItem[];
+	[key: string]: unknown;
+}
+
+interface MergedItinerary {
+	closest_stop?: Stop;
+	itineraries?: Itinerary[];
+	schedule_items?: ScheduleItem[];
+}
+
+interface Route {
+	merged_itineraries?: MergedItinerary[];
+	itineraries?: Itinerary[];
+	schedule_items?: ScheduleItem[];
+	[key: string]: unknown;
+}
+
+interface V4Response {
+	nearby_routes?: Route[];
+}
+
+interface V3Response {
+	routes?: Route[];
+}
+
+interface CacheEntry {
+	data: V3Response;
+	expiresAt: number;
+	freshness: 'fresh-realtime' | 'fresh-schedule';
+}
+
+interface FetchError extends Error {
+	status?: number;
+	retryAfter?: number;
+}
 
 /**
  * Calculate distance between two coordinates using Haversine formula
- * @param {number} lat1 - First latitude
- * @param {number} lon1 - First longitude
- * @param {number} lat2 - Second latitude
- * @param {number} lon2 - Second longitude
- * @returns {number} Distance in meters
  */
-function haversine(lat1, lon1, lat2, lon2) {
+function haversine(lat1: number, lon1: number, lat2: number, lon2: number): number {
 	const R = 6371000; // Earth radius in meters
 	const φ1 = (lat1 * Math.PI) / 180;
 	const φ2 = (lat2 * Math.PI) / 180;
@@ -28,26 +78,24 @@ function haversine(lat1, lon1, lat2, lon2) {
  * Transforms v4 API response to v3 format for frontend compatibility.
  * v4 wraps itineraries in merged_itineraries with additional nesting.
  * This function flattens it back to v3 structure while preserving stop information.
- * @param {Object} v4Response - The v4 API response
- * @returns {Object} - Transformed response in v3 format
  */
-function transformV4ToV3Format(v4Response) {
+function transformV4ToV3Format(v4Response: V4Response): V3Response {
 	if (!v4Response || !v4Response.nearby_routes) {
-		return v4Response;
+		return v4Response as V3Response;
 	}
 
 	// Transform nearby_routes to routes format
 	const routes = v4Response.nearby_routes.map((route) => {
 		// Flatten merged_itineraries structure
-		const flattenedRoute = { ...route };
+		const flattenedRoute: Route = { ...route };
 		delete flattenedRoute.merged_itineraries;
 
 		// Combine all itineraries and schedule_items from merged_itineraries
 		// Preserve closest_stop from merged_itinerary on each itinerary
 		// Associate schedule_items with their itineraries using internal_itinerary_id
-		const allItineraries = [];
-		const allScheduleItems = [];
-		const scheduleItemsByItineraryId = {};
+		const allItineraries: Itinerary[] = [];
+		const allScheduleItems: ScheduleItem[] = [];
+		const scheduleItemsByItineraryId: Record<string, ScheduleItem[]> = {};
 
 		if (Array.isArray(route.merged_itineraries)) {
 			// First pass: collect all schedule items grouped by internal_itinerary_id
@@ -55,12 +103,14 @@ function transformV4ToV3Format(v4Response) {
 				if (Array.isArray(merged.schedule_items)) {
 					for (const scheduleItem of merged.schedule_items) {
 						const itineraryId = scheduleItem.internal_itinerary_id;
-						if (!scheduleItemsByItineraryId[itineraryId]) {
-							scheduleItemsByItineraryId[itineraryId] = [];
+						if (itineraryId) {
+							if (!scheduleItemsByItineraryId[itineraryId]) {
+								scheduleItemsByItineraryId[itineraryId] = [];
+							}
+							// Remove internal_itinerary_id from schedule_item (v3 doesn't have it at item level)
+							const { internal_itinerary_id: _removed, ...scheduleItemWithoutId } = scheduleItem;
+							scheduleItemsByItineraryId[itineraryId].push(scheduleItemWithoutId);
 						}
-						// Remove internal_itinerary_id from schedule_item (v3 doesn't have it at item level)
-						const { internal_itinerary_id, ...scheduleItemWithoutId } = scheduleItem;
-						scheduleItemsByItineraryId[itineraryId].push(scheduleItemWithoutId);
 					}
 					allScheduleItems.push(...merged.schedule_items);
 				}
@@ -74,7 +124,7 @@ function transformV4ToV3Format(v4Response) {
 					const itinerariesWithData = merged.itineraries.map((itinerary) => ({
 						...itinerary,
 						closest_stop: merged.closest_stop,
-						schedule_items: scheduleItemsByItineraryId[itinerary.internal_itinerary_id] || []
+						schedule_items: scheduleItemsByItineraryId[itinerary.internal_itinerary_id || ''] || []
 					}));
 					allItineraries.push(...itinerariesWithData);
 				}
@@ -99,30 +149,29 @@ function transformV4ToV3Format(v4Response) {
  * @param {Object} data - The API response data
  * @returns {boolean} - True if any route has at least one alert
  */
-function hasActiveAlerts(data) {
-	const routes = data?.routes;
+function hasActiveAlerts(data: unknown) {
+	const routes = (data as Record<string, unknown>)?.routes;
 	if (!Array.isArray(routes)) return false;
 	return routes.some((route) => Array.isArray(route.alerts) && route.alerts.length > 0);
 }
 
 /**
  * Analyzes Transit API response to detect if it contains real-time predictions
- * @param {Object} data - The API response data
- * @returns {boolean} - True if any schedule items have is_real_time: true
  */
-function hasRealTimeData(data) {
+function hasRealTimeData(data: V3Response | unknown): boolean {
 	if (!data || typeof data !== 'object') {
 		return false;
 	}
 
 	// Check if response has routes array
-	const routes = data.routes || data;
+	const dataObj = data as { routes?: Route[] };
+	const routes = dataObj.routes || data;
 	if (!Array.isArray(routes)) {
 		return false;
 	}
 
 	// Traverse routes -> itineraries -> schedule_items to find real-time data
-	for (const route of routes) {
+	for (const route of routes as Route[]) {
 		if (route.itineraries && Array.isArray(route.itineraries)) {
 			for (const itinerary of route.itineraries) {
 				if (itinerary.schedule_items && Array.isArray(itinerary.schedule_items)) {
@@ -140,18 +189,16 @@ function hasRealTimeData(data) {
 }
 
 // Server-side request cache (optional, enabled via ENABLE_SERVER_CACHE env var)
-const CACHE_ENABLED = config.parseBoolean(process.env.ENABLE_SERVER_CACHE);
+const CACHE_ENABLED = parseBoolean(process.env.ENABLE_SERVER_CACHE);
 // Dual-TTL configuration: different cache times for real-time vs schedule data
-const REALTIME_CACHE_TTL = parseInt(process.env.REALTIME_CACHE_TTL) || 5000; // 5s default (free tier safe)
-const STATIC_CACHE_TTL = parseInt(process.env.STATIC_CACHE_TTL) || 120000; // 120s for schedule
+const REALTIME_CACHE_TTL = parseInt(process.env.REALTIME_CACHE_TTL || '') || 5000; // 5s default (free tier safe)
+const STATIC_CACHE_TTL = parseInt(process.env.STATIC_CACHE_TTL || '') || 120000; // 120s for schedule
 const MAX_CACHE_SIZE = 100; // Bounded cache to prevent memory issues
 
 /**
  * Get appropriate Cache-Control max-age based on data freshness
- * @param {string} freshness - 'fresh-realtime' or 'fresh-schedule'
- * @returns {number} - max-age in seconds
  */
-function getCacheMaxAge(freshness) {
+function getCacheMaxAge(freshness: 'fresh-realtime' | 'fresh-schedule'): number {
 	if (freshness === 'fresh-realtime') {
 		// Match REALTIME_CACHE_TTL: 5s for free tier, 3s for paid tier
 		return Math.floor(REALTIME_CACHE_TTL / 1000);
@@ -161,11 +208,11 @@ function getCacheMaxAge(freshness) {
 }
 
 // In-memory cache storage
-const requestCache = new Map();
-const pendingRequests = new Map();
+const requestCache = new Map<string, CacheEntry>();
+const pendingRequests = new Map<string, Promise<V3Response>>();
 
 // Periodic cleanup of expired cache entries
-let cleanupInterval = null;
+let cleanupInterval: NodeJS.Timeout | null = null;
 if (CACHE_ENABLED) {
 	cleanupInterval = setInterval(() => {
 		const now = Date.now();
@@ -186,17 +233,18 @@ if (CACHE_ENABLED) {
 }
 
 // Export cleanup function for testing and graceful shutdown
-exports.cleanup = function () {
+export function cleanup(): void {
 	if (cleanupInterval) {
 		clearInterval(cleanupInterval);
 		cleanupInterval = null;
 	}
 	requestCache.clear();
 	pendingRequests.clear();
-};
+}
 
 // Get list of nearby routes
-exports.nearby = async function (req, res) {
+export async function nearby(req: Request, res: Response): Promise<Response | void> {
+	const reqWithLog = req as RequestWithLog;
 	const { lat, lon, max_distance } = req.query;
 
 	// Validate required parameters
@@ -206,10 +254,10 @@ exports.nearby = async function (req, res) {
 
 	// Parse max_distance as integer (query params are strings)
 	// Transit API expects an integer, not a string
-	const distance = max_distance ? parseInt(max_distance, 10) : 1000;
+	const distance = max_distance ? parseInt(max_distance as string, 10) : 1000;
 
 	// Validate that lat and lon are valid numbers
-	if (isNaN(parseFloat(lat)) || isNaN(parseFloat(lon))) {
+	if (isNaN(parseFloat(lat as string)) || isNaN(parseFloat(lon as string))) {
 		return res.status(400).json({ error: 'Invalid parameters: lat and lon must be valid numbers' });
 	}
 
@@ -220,8 +268,8 @@ exports.nearby = async function (req, res) {
 
 	// Round coordinates to 4 decimal places (~10.1m precision) for effective cache key grouping
 	// This ensures nearby requests (GPS drift, manual pin drag) share the same cache
-	const roundedLat = parseFloat(lat).toFixed(4);
-	const roundedLon = parseFloat(lon).toFixed(4);
+	const roundedLat = parseFloat(lat as string).toFixed(4);
+	const roundedLon = parseFloat(lon as string).toFixed(4);
 
 	// Cache key based on rounded coordinates
 	const cacheKey = `${roundedLat},${roundedLon},${distance}`;
@@ -233,8 +281,7 @@ exports.nearby = async function (req, res) {
 			const maxAge = getCacheMaxAge(cached.freshness || 'fresh-schedule');
 			res.set({
 				'Cache-Control': `public, max-age=${maxAge}`,
-				//prettier-ignore
-				'Vary': 'Accept-Encoding',
+				Vary: 'Accept-Encoding',
 				'X-Cache': 'HIT',
 				'X-Cache-Freshness': cached.freshness || 'unknown'
 			});
@@ -247,25 +294,25 @@ exports.nearby = async function (req, res) {
 			try {
 				const data = await Promise.race([
 					pending,
-					new Promise((_, reject) =>
+					new Promise<never>((_, reject) =>
 						setTimeout(() => reject(new Error('In-flight request timeout')), 15000)
 					)
 				]);
 				// Use conservative short TTL for in-flight (no freshness info yet)
 				res.set({
 					'Cache-Control': 'public, max-age=3',
-					//prettier-ignore
-					'Vary': 'Accept-Encoding',
+					Vary: 'Accept-Encoding',
 					'X-Cache': 'HIT-INFLIGHT'
 				});
 				return res.status(200).json(data);
-			} catch (error) {
+			} catch {
 				// Fall through to make new request if pending request failed
 			}
 		}
 	}
+
 	// Create promise for API request (for in-flight deduplication)
-	const fetchPromise = (async () => {
+	const fetchPromise = (async (): Promise<V3Response> => {
 		try {
 			const response = await fetch(
 				`https://external.transitapp.com/v4/public/nearby_routes?lat=${lat}&lon=${lon}&max_distance=${distance}&max_num_departures=6`,
@@ -273,7 +320,7 @@ exports.nearby = async function (req, res) {
 					headers: {
 						Accept: 'application/json',
 						'Content-Type': 'application/json',
-						apiKey: process.env.TRANSIT_API_KEY
+						apiKey: process.env.TRANSIT_API_KEY || ''
 					},
 					signal: AbortSignal.timeout(10000) // 10 second timeout
 				}
@@ -285,7 +332,7 @@ exports.nearby = async function (req, res) {
 				// Handle rate limiting with more detail
 				if (response.status === 429) {
 					const retryAfter = response.headers.get('Retry-After');
-					req.log.warn(
+					reqWithLog.log.warn(
 						{
 							api: 'transit',
 							endpoint: 'nearby_routes',
@@ -296,13 +343,13 @@ exports.nearby = async function (req, res) {
 						'Rate limited by Transit API'
 					);
 
-					const error = new Error('Rate limit exceeded');
+					const error = new Error('Rate limit exceeded') as FetchError;
 					error.status = 429;
 					error.retryAfter = retryAfter ? parseInt(retryAfter) : 60;
 					throw error;
 				}
 
-				req.log.error(
+				reqWithLog.log.error(
 					{
 						api: 'transit',
 						endpoint: 'nearby_routes',
@@ -311,12 +358,12 @@ exports.nearby = async function (req, res) {
 					},
 					'Error response from Transit API'
 				);
-				const error = new Error('Transit API error');
+				const error = new Error('Transit API error') as FetchError;
 				error.status = response.status;
 				throw error;
 			}
 
-			const v4Data = await response.json();
+			const v4Data = (await response.json()) as V4Response;
 
 			// Transform v4 response to v3 format for frontend compatibility
 			const data = transformV4ToV3Format(v4Data);
@@ -331,8 +378,8 @@ exports.nearby = async function (req, res) {
 						route.itineraries.some((itinerary) => {
 							if (!itinerary.closest_stop) return false;
 							const dist = haversine(
-								parseFloat(lat),
-								parseFloat(lon),
+								parseFloat(lat as string),
+								parseFloat(lon as string),
 								itinerary.closest_stop.stop_lat,
 								itinerary.closest_stop.stop_lon
 							);
@@ -382,15 +429,15 @@ exports.nearby = async function (req, res) {
 
 		res.set({
 			'Cache-Control': `public, max-age=${maxAge}`,
-			//prettier-ignore
-			'Vary': 'Accept-Encoding',
+			Vary: 'Accept-Encoding',
 			'X-Cache': CACHE_ENABLED ? 'MISS' : 'DISABLED',
 			'X-Cache-Freshness': freshness
 		});
 
 		res.status(200).json(data);
-	} catch (error) {
-		req.log.error(
+	} catch (err) {
+		const error = err as FetchError;
+		reqWithLog.log.error(
 			{
 				api: 'transit',
 				endpoint: 'nearby_routes',
@@ -428,4 +475,4 @@ exports.nearby = async function (req, res) {
 
 		return res.status(500).json({ error: 'Failed to fetch nearby routes' });
 	}
-};
+}

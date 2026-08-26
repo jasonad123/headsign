@@ -1,24 +1,28 @@
-'use strict';
-
-var config = require('../../config/environment');
-var logger = require('../../config/logger');
+import { Request, Response } from 'express';
+import config from '../../config/environment/index.js';
+import logger from '../../config/logger.js';
 
 // Default coordinates (New York City)
-var DEFAULT_COORDINATES = { latitude: 40.75426683398718, longitude: -73.98672703719805 };
+const DEFAULT_COORDINATES = { latitude: 40.75426683398718, longitude: -73.98672703719805 };
+
+interface Coordinates {
+	latitude: number;
+	longitude: number;
+}
 
 // Validate coordinate format (lat,lng)
-function validateCoordinates(locationStr) {
+function validateCoordinates(locationStr: string | undefined): Coordinates | false {
 	if (!locationStr || typeof locationStr !== 'string') {
 		return false;
 	}
 
-	var coords = locationStr.split(',');
+	const coords = locationStr.split(',');
 	if (coords.length !== 2) {
 		return false;
 	}
 
-	var lat = parseFloat(coords[0].trim());
-	var lng = parseFloat(coords[1].trim());
+	const lat = parseFloat(coords[0].trim());
+	const lng = parseFloat(coords[1].trim());
 
 	// Check if valid numbers and within valid ranges
 	if (isNaN(lat) || isNaN(lng)) {
@@ -33,7 +37,7 @@ function validateCoordinates(locationStr) {
 }
 
 // Get unattended setup configuration
-exports.getUnattendedConfig = function (req, res) {
+export function getUnattendedConfig(req: Request, res: Response): Response {
 	if (!config.unattendedSetup.enabled) {
 		return res.status(404).json({
 			error: 'Unattended setup is not enabled'
@@ -41,7 +45,7 @@ exports.getUnattendedConfig = function (req, res) {
 	}
 
 	// Use default coordinates if not provided (New York City)
-	var coordinates = validateCoordinates(config.unattendedSetup.location);
+	let coordinates = validateCoordinates(config.unattendedSetup.location);
 	if (!coordinates) {
 		// Log warning about falling back to default coordinates
 		if (config.unattendedSetup.location) {
@@ -66,7 +70,7 @@ exports.getUnattendedConfig = function (req, res) {
 	}
 
 	// All other values are pre-validated and defaulted by environment/index.js
-	res.json({
+	return res.json({
 		enabled: true,
 		latLng: coordinates,
 		title: config.unattendedSetup.title,
@@ -78,8 +82,9 @@ exports.getUnattendedConfig = function (req, res) {
 		showQRCode: config.unattendedSetup.showQRCode,
 		maxDistance: config.unattendedSetup.maxDistance,
 		customLogo: config.unattendedSetup.customLogo,
+		viewMode: config.unattendedSetup.viewMode,
 		groupItinerariesByStop: config.unattendedSetup.groupItinerariesByStop,
 		filterRedundantTerminus: config.unattendedSetup.filterRedundantTerminus,
 		showRouteLongName: config.unattendedSetup.showRouteLongName
 	});
-};
+}

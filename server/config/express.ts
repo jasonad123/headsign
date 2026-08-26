@@ -2,20 +2,23 @@
  * Express configuration
  */
 
-'use strict';
+import express, { Application, Request, Response, NextFunction } from 'express';
+import pinoHttp from 'pino-http';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import errorHandler from 'errorhandler';
+import path from 'path';
+import config from './environment/index.js';
+import helmet from 'helmet';
+import logger, { baseConfig, isDevelopment } from './logger.js';
+import ejs from 'ejs';
 
-var express = require('express');
-var pinoHttp = require('pino-http');
-var compression = require('compression');
-var cookieParser = require('cookie-parser');
-var errorHandler = require('errorhandler');
-var path = require('path');
-var config = require('./environment');
-var helmet = require('helmet');
-var logger = require('./logger');
+interface ErrorWithStatus extends Error {
+	status?: number;
+}
 
-module.exports = function (app) {
-	var env = app.get('env');
+export default function configureExpress(app: Application): void {
+	const env = app.get('env');
 
 	// Trust proxy setting for deployments behind reverse proxies/load balancers
 	// This allows req.ip to correctly reflect the client IP from X-Forwarded-For
@@ -39,17 +42,17 @@ module.exports = function (app) {
 	// so CORS is not needed. CORS is only required during local development
 	// when SvelteKit dev server (port 5173) needs to call Express (port 8080).
 	if (env !== 'production') {
-		app.use(function (req, res, next) {
-			var allowedOrigins = config.security.cors.allowedOrigins;
-			var origin = req.headers.origin;
+		app.use((req: Request, res: Response, next: NextFunction) => {
+			const allowedOrigins = config.security.cors.allowedOrigins;
+			const origin = req.headers.origin;
 
-			if (allowedOrigins.indexOf(origin) > -1) {
+			if (origin && allowedOrigins.indexOf(origin) > -1) {
 				res.setHeader('Access-Control-Allow-Origin', origin);
 			}
 
 			res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
 			res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-			res.header('Access-Control-Allow-Credentials', true);
+			res.header('Access-Control-Allow-Credentials', 'true');
 
 			if (req.method === 'OPTIONS') {
 				return res.sendStatus(200);
@@ -60,7 +63,7 @@ module.exports = function (app) {
 	}
 
 	app.set('views', config.root + '/server/views');
-	app.engine('html', require('ejs').renderFile);
+	app.engine('html', ejs.renderFile);
 	app.set('view engine', 'html');
 	app.use(compression());
 	app.use(express.urlencoded({ extended: false, limit: '1mb' }));
@@ -74,7 +77,7 @@ module.exports = function (app) {
 			etag: true, // Enable ETags for cache validation
 			lastModified: true, // Send Last-Modified headers
 			index: false, // Don't serve index.html (SvelteKit handles routing)
-			setHeaders: function (res, filepath) {
+			setHeaders: (res: Response, filepath: string) => {
 				// Immutable cache for hashed assets (SvelteKit's /_app/immutable/)
 				if (filepath.includes('/_app/immutable/')) {
 					res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
@@ -93,16 +96,17 @@ module.exports = function (app) {
 
 	// HTTP request logging with pino
 	// Note: Create pino-http's own logger instance to avoid transport worker thread issues
-	var pinoHttpOptions = {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const pinoHttpOptions: any = {
 		// Use base config without transport for compatibility
-		level: logger.baseConfig.level,
-		timestamp: logger.baseConfig.timestamp,
-		base: logger.baseConfig.base,
-		redact: logger.baseConfig.redact,
-		serializers: logger.baseConfig.serializers,
+		level: baseConfig.level,
+		timestamp: baseConfig.timestamp,
+		base: baseConfig.base,
+		redact: baseConfig.redact,
+		serializers: baseConfig.serializers,
 
 		// Custom log levels based on response status
-		customLogLevel: function (req, res, err) {
+		customLogLevel: (_req: Request, res: Response, err?: Error) => {
 			if (res.statusCode >= 500 || err) return 'error';
 			if (res.statusCode >= 400) return 'warn';
 			if (res.statusCode >= 300) return 'silent'; // Don't log redirects
@@ -110,13 +114,15 @@ module.exports = function (app) {
 		},
 
 		// Apache-style message format inside JSON
-		customSuccessMessage: function (req, res) {
-			var duration = res.responseTime !== undefined ? res.responseTime + 'ms' : '';
+		customSuccessMessage: (req: Request, res: Response) => {
+			const responseTime = (res as Response & { responseTime?: number }).responseTime;
+			const duration = responseTime !== undefined ? responseTime + 'ms' : '';
 			return req.method + ' ' + req.url + ' ' + res.statusCode + (duration ? ' ' + duration : '');
 		},
 
-		customErrorMessage: function (req, res, err) {
-			var duration = res.responseTime !== undefined ? res.responseTime + 'ms' : '';
+		customErrorMessage: (req: Request, res: Response, err: Error) => {
+			const responseTime = (res as Response & { responseTime?: number }).responseTime;
+			const duration = responseTime !== undefined ? responseTime + 'ms' : '';
 			return (
 				req.method +
 				' ' +
@@ -138,16 +144,16 @@ module.exports = function (app) {
 		},
 
 		// Add custom properties to each log
-		customProps: function (req, res) {
+		customProps: (req: Request) => {
 			return {
 				userAgent: req.headers['user-agent'],
-				ip: req.ip || req.connection.remoteAddress
+				ip: req.ip || req.socket.remoteAddress
 			};
 		},
 
 		// Skip logging for health checks and static assets
 		autoLogging: {
-			ignore: function (req) {
+			ignore: (req: Request) => {
 				return (
 					req.path === '/health' ||
 					req.path === '/favicon.ico' ||
@@ -158,7 +164,7 @@ module.exports = function (app) {
 	};
 
 	// Add pino-pretty transport for development
-	if (logger.isDevelopment) {
+	if (isDevelopment) {
 		pinoHttpOptions.transport = {
 			target: 'pino-pretty',
 			options: {
@@ -177,16 +183,17 @@ module.exports = function (app) {
 	}
 
 	// Error handling
-	app.use(function (err, req, res, next) {
+	app.use((err: ErrorWithStatus, req: Request, res: Response, _next: NextFunction) => {
 		// Use pino logger if available, fallback to console
-		if (req.log) {
-			req.log.error({ err: err }, 'Unhandled request error');
+		const reqWithLog = req as Request & { log?: typeof logger };
+		if (reqWithLog.log) {
+			reqWithLog.log.error({ err }, 'Unhandled request error');
 		} else {
-			logger.error({ err: err }, 'Unhandled request error');
+			logger.error({ err }, 'Unhandled request error');
 		}
 		res.status(err.status || 500).send({
 			message: 'Server error',
 			error: {}
 		});
 	});
-};
+}

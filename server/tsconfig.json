@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "Node16",
+		"moduleResolution": "Node16",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"outDir": "../dist",
+		"rootDir": ".",
+		"declaration": false,
+		"declarationMap": false,
+		"sourceMap": true,
+		"resolveJsonModule": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": false,
+		"noImplicitReturns": false,
+		"noFallthroughCasesInSwitch": true
+	},
+	"include": ["./**/*.ts"],
+	"exclude": ["../node_modules", "../dist"]
+}

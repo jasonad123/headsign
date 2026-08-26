@@ -6,7 +6,7 @@
 		"watchPatterns": ["**", "!/*.md"]
 	},
 	"deploy": {
-		"startCommand": "node server/app.js",
+		"startCommand": "node dist/app.js",
 		"healthcheckPath": "/health",
 		"healthcheckTimeout": 100,
 		"restartPolicyType": "ON_FAILURE"
