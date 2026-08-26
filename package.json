@@ -1,6 +1,6 @@
 {
   "name": "headsign-server",
-  "version": "1.5.6",
+  "version": "1.5.7",
   "main": "server/app.js",
   "dependencies": {
     "compression": "^1.8.1",
