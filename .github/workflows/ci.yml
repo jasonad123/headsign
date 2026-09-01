@@ -97,3 +97,26 @@ jobs:
           sleep 10
           curl -f http://localhost:8080 || exit 1
           docker stop test-container
+
+      # TEMPORARY: for PR #145 image-size review only, remove before merge.
+      - name: TEMP - checkout main for size baseline
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          path: main-baseline
+
+      # TEMPORARY: for PR #145 image-size review only, remove before merge.
+      - name: TEMP - build main baseline image for size comparison
+        run: docker buildx build --load -t headsign-test:main-baseline ./main-baseline
+
+      # TEMPORARY: for PR #145 image-size review only, remove before merge.
+      - name: TEMP - compare image sizes
+        run: |
+          echo "## Image size comparison (PR #145, temporary check)" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          printf "%-15s %s\n" "TAG" "SIZE" | tee -a "$GITHUB_STEP_SUMMARY"
+          docker images headsign-test --format "{{.Tag}}\t{{.Size}}" \
+            | awk -F'\t' '{printf "%-15s %s\n", $1, $2}' | tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "\`latest\` = this PR's branch, \`main-baseline\` = current main" >> "$GITHUB_STEP_SUMMARY"
