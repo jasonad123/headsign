@@ -47,9 +47,12 @@ RUN cd svelte-app && pnpm run build
 
 # Prune root node_modules down to production-only dependencies now that the
 # build is done, so the runtime stage can copy them in directly instead of
-# reinstalling (and needing pnpm/corepack) itself
-RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
-    pnpm install --prod --frozen-lockfile
+# reinstalling (and needing pnpm/corepack) itself. `pnpm prune` (not
+# `install --prod`) is required here - install --prod only unlinks
+# devDependencies from node_modules, it leaves their content behind in
+# node_modules/.pnpm; prune actually deletes it. No cache mount needed -
+# prune only removes local files, it never touches the pnpm store.
+RUN pnpm prune --prod
 
 # ==============================================================================
 # Production stage - minimal runtime image
