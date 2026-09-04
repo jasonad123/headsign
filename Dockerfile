@@ -7,6 +7,10 @@
 # 3. Remove unnecessary svelte-app prod dependencies (smaller image)
 # 4. Add Node heap size limit for stability
 # 5. Run as non-root user for security
+# 6. Prune to production-only node_modules once in the builder stage and
+#    copy it into the runtime stage - no pnpm/corepack, lockfile, or
+#    workspace file needed at runtime (smaller image, no package manager
+#    in production)
 #
 # Compatible with both node:24-alpine and dhi.io/node:24-alpine3.22
 # ==============================================================================
@@ -41,6 +45,15 @@ COPY server ./server
 # Build the SvelteKit application
 RUN cd svelte-app && pnpm run build
 
+# Prune root node_modules down to production-only dependencies now that the
+# build is done, so the runtime stage can copy them in directly instead of
+# reinstalling (and needing pnpm/corepack) itself. `pnpm prune` (not
+# `install --prod`) is required here - install --prod only unlinks
+# devDependencies from node_modules, it leaves their content behind in
+# node_modules/.pnpm; prune actually deletes it. No cache mount needed -
+# prune only removes local files, it never touches the pnpm store.
+RUN pnpm prune --prod
+
 # ==============================================================================
 # Production stage - minimal runtime image
 # ==============================================================================
@@ -49,20 +62,15 @@ FROM node:24-alpine@sha256:e67514e5d0f6c46656005e1b693b2ec9d52e80b641307de684d4a
 
 WORKDIR /app
 
-# Enable corepack for pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-# Copy only what's needed for runtime
+# Copy only what's needed for runtime, setting ownership at copy time
+# (avoids a separate `chown -R` layer duplicating file content on overlayfs)
 # Note: svelte-app/package.json NOT needed - build output is self-contained
-COPY --from=builder /app/svelte-app/build ./svelte-app/build
-COPY --from=builder /app/server ./server
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
-
-# Install only production dependencies with cache mount
-RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
-    pnpm install --prod --frozen-lockfile
+# Note: pnpm-lock.yaml/pnpm-workspace.yaml NOT needed - node_modules is
+# already pruned to production dependencies, no install runs in this stage
+COPY --from=builder --chown=node:node /app/svelte-app/build ./svelte-app/build
+COPY --from=builder --chown=node:node /app/server ./server
+COPY --from=builder --chown=node:node /app/package.json ./package.json
+COPY --from=builder --chown=node:node /app/node_modules ./node_modules
 
 # Environment configuration
 ENV NODE_ENV=production
@@ -70,9 +78,6 @@ ENV PORT=8080
 ENV USE_SVELTE=true
 
 EXPOSE 8080
-
-# Change ownership to node user before switching
-RUN chown -R node:node /app
 
 # Run as non-root user for security (node user exists in alpine image)
 USER node
