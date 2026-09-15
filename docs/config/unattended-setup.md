@@ -137,9 +137,13 @@ The default is _auto_ if not set.
 ### UNATTENDED_HEADER_COLOR
 
 Hex color code for header background
-Format: "#RRGGBB" (e.g., #FF5733)
+Format: "#RRGGBB" or "#RGB" (e.g., `#FF5733`)
 
 If not set, or if set to an invalid value, the header defaults to `#30b566` (a warning is logged to the server console when an invalid value is provided).
+
+**Local `.env` file:** the value must be quoted, e.g. `UNATTENDED_HEADER_COLOR="#FF5733"`. Node's built-in `--env-file` loader (used by `npm start`) treats an unquoted leading `#` as the start of a comment, so an unquoted value like `UNATTENDED_HEADER_COLOR=#FF5733` silently resolves to an empty string.
+
+**Railway (or other platforms that inject env vars directly):** enter the raw value with no quotes, e.g. `#FF5733`. Adding quotes there makes them part of the literal value and causes validation to fail.
 
 ### UNATTENDED_CUSTOM_LOGO
 
