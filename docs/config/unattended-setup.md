@@ -139,6 +139,8 @@ The default is _auto_ if not set.
 Hex color code for header background
 Format: "#RRGGBB" or "#RGB" (e.g., `#FF5733`)
 
+`UNATTENDED_HEADER_COLOUR` (British spelling) is also accepted as an alias for this variable. If both are set to different values, `UNATTENDED_HEADER_COLOR` takes precedence and a warning is logged to the server console.
+
 If not set, or if set to an invalid value, the header defaults to `#30b566` (a warning is logged to the server console when an invalid value is provided).
 
 **Local `.env` file (`npm start`, no Docker):** the value must be quoted, e.g. `UNATTENDED_HEADER_COLOR="#FF5733"`. Node's built-in `--env-file` loader (used by `npm start`) treats an unquoted leading `#` as the start of a comment, so an unquoted value like `UNATTENDED_HEADER_COLOR=#FF5733` silently resolves to an empty string.
