@@ -141,9 +141,23 @@ Format: "#RRGGBB" or "#RGB" (e.g., `#FF5733`)
 
 If not set, or if set to an invalid value, the header defaults to `#30b566` (a warning is logged to the server console when an invalid value is provided).
 
-**Local `.env` file:** the value must be quoted, e.g. `UNATTENDED_HEADER_COLOR="#FF5733"`. Node's built-in `--env-file` loader (used by `npm start`) treats an unquoted leading `#` as the start of a comment, so an unquoted value like `UNATTENDED_HEADER_COLOR=#FF5733` silently resolves to an empty string.
+**Local `.env` file (`npm start`, no Docker):** the value must be quoted, e.g. `UNATTENDED_HEADER_COLOR="#FF5733"`. Node's built-in `--env-file` loader (used by `npm start`) treats an unquoted leading `#` as the start of a comment, so an unquoted value like `UNATTENDED_HEADER_COLOR=#FF5733` silently resolves to an empty string.
 
-**Railway (or other platforms that inject env vars directly):** enter the raw value with no quotes, e.g. `#FF5733`. Adding quotes there makes them part of the literal value and causes validation to fail.
+**Railway (or other platforms that inject env vars directly):** enter the raw value with no quotes, e.g. `#FF5733`. Adding quotes there makes them part of the literal value and causes validation to fail. This also applies to Railway deployments that run the published Docker image directly, since Railway injects Variables straight into the container's environment either way.
+
+**Docker Compose `env_file:` or `docker run --env-file`:** the container's `CMD` runs plain `node server/app.js` (no `--env-file` flag), so Node's quoting quirk above does not apply inside a container. Docker's own env-file parser only treats `#` as a comment when it is the first character of a line, and does not strip surrounding quotes, so the value must be **unquoted**:
+
+```bash
+# .env, read via env_file: in compose.yaml, or docker run --env-file .env
+UNATTENDED_HEADER_COLOR=#FF5733
+```
+
+**Docker Compose `environment:` map:** this is plain YAML, where an unquoted `#` after `: ` starts a YAML comment, so the value must be **quoted**:
+
+```yaml
+environment:
+  UNATTENDED_HEADER_COLOR: "#FF5733"
+```
 
 ### UNATTENDED_CUSTOM_LOGO
 
