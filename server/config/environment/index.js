@@ -144,6 +144,42 @@ function validateColumns(columns) {
 }
 
 /**
+ * Resolves the header color env var, supporting both US and UK spellings
+ * (UNATTENDED_HEADER_COLOR and UNATTENDED_HEADER_COLOUR). If both are set
+ * to different values, UNATTENDED_HEADER_COLOR takes precedence.
+ * @returns {string} - Raw header color value from environment, or default (#30b566)
+ */
+function resolveHeaderColorEnv() {
+	var colorValue = process.env.UNATTENDED_HEADER_COLOR;
+	var colourValue = process.env.UNATTENDED_HEADER_COLOUR;
+	if (colorValue && colourValue && colorValue !== colourValue) {
+		console.warn(
+			'Both UNATTENDED_HEADER_COLOR and UNATTENDED_HEADER_COLOUR are set with different values. Using UNATTENDED_HEADER_COLOR: ' +
+				colorValue
+		);
+	}
+	return colorValue || colourValue || '#30b566';
+}
+
+/**
+ * Validates and returns a safe header color hex value
+ * @param {string} color - The hex color to validate
+ * @returns {string} - Valid hex color or default (#30b566)
+ */
+function validateHeaderColor(color) {
+	var hexPattern = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+	if (hexPattern.test(color)) {
+		return color;
+	}
+	console.warn(
+		'Invalid UNATTENDED_HEADER_COLOR/UNATTENDED_HEADER_COLOUR value: ' +
+			color +
+			'. Expected a hex color in "#RRGGBB" or "#RGB" format. Using default: #30b566'
+	);
+	return '#30b566';
+}
+
+/**
  * Validates location format (lat,lng)
  * @param {string} location - The location string to validate
  * @returns {string} - Original location or empty string if invalid
@@ -220,7 +256,7 @@ var all = {
 		timeFormat: validateTimeFormat(process.env.UNATTENDED_TIME_FORMAT || 'HH:mm'),
 		language: validateLanguage(process.env.UNATTENDED_LANGUAGE || 'en'),
 		theme: validateTheme(process.env.UNATTENDED_THEME || 'auto'),
-		headerColor: process.env.UNATTENDED_HEADER_COLOR || '#30b566',
+		headerColor: validateHeaderColor(resolveHeaderColorEnv()),
 		columns: validateColumns(process.env.UNATTENDED_COLUMNS || 'auto'),
 		showQRCode: parseBoolean(process.env.UNATTENDED_SHOW_QR_CODE),
 		maxDistance: validateMaxDistance(parseInt(process.env.UNATTENDED_MAX_DISTANCE) || 500),
