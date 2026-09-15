@@ -1,6 +1,6 @@
 {
   "name": "headsign-server",
-  "version": "1.5.7",
+  "version": "1.5.8",
   "main": "server/app.js",
   "dependencies": {
     "compression": "^1.8.1",
@@ -8,7 +8,7 @@
     "ejs": "~6.0.0",
     "errorhandler": "~1.5.2",
     "express": "^5.2.1",
-    "helmet": "^8.1.0",
+    "helmet": "^8.3.0",
     "morgan": "^1.10.1",
     "pino": "^10.3.1",
     "pino-http": "^11.0.0"
