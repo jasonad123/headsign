@@ -144,6 +144,26 @@ function validateColumns(columns) {
 }
 
 /**
+ * Validates and returns a safe view mode value
+ * @param {string} viewMode - The view mode to validate
+ * @returns {string} - Valid view mode or default (card)
+ */
+function validateViewMode(viewMode) {
+	var allowed = ['card', 'board', 'vertical'];
+	if (allowed.includes(viewMode)) {
+		return viewMode;
+	}
+	console.warn(
+		'Invalid UNATTENDED_VIEW_MODE value: ' +
+			viewMode +
+			'. Must be one of: ' +
+			allowed.join(', ') +
+			'. Using default: card'
+	);
+	return 'card';
+}
+
+/**
  * Resolves the header color env var, supporting both US and UK spellings
  * (UNATTENDED_HEADER_COLOR and UNATTENDED_HEADER_COLOUR). If both are set
  * to different values, UNATTENDED_HEADER_COLOR takes precedence.
@@ -258,6 +278,7 @@ var all = {
 		theme: validateTheme(process.env.UNATTENDED_THEME || 'auto'),
 		headerColor: validateHeaderColor(resolveHeaderColorEnv()),
 		columns: validateColumns(process.env.UNATTENDED_COLUMNS || 'auto'),
+		viewMode: validateViewMode(process.env.UNATTENDED_VIEW_MODE || 'card'),
 		showQRCode: parseBoolean(process.env.UNATTENDED_SHOW_QR_CODE),
 		maxDistance: validateMaxDistance(parseInt(process.env.UNATTENDED_MAX_DISTANCE) || 500),
 		customLogo: process.env.UNATTENDED_CUSTOM_LOGO || null,
