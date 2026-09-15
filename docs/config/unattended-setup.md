@@ -139,13 +139,15 @@ The default is _auto_ if not set.
 Hex color code for header background
 Format: "#RRGGBB" or "#RGB" (e.g., `#FF5733`)
 
-`UNATTENDED_HEADER_COLOUR` (British spelling) is also accepted as an alias for this variable. If both are set to different values, `UNATTENDED_HEADER_COLOR` takes precedence and a warning is logged to the server console.
+`UNATTENDED_HEADER_COLOUR` is also accepted as an alias for this variable. If both are set to different values, `UNATTENDED_HEADER_COLOR` takes precedence and a warning is logged to the server console.
 
 If not set, or if set to an invalid value, the header defaults to `#30b566` (a warning is logged to the server console when an invalid value is provided).
 
-**Local `.env` file (`npm start`, no Docker):** the value must be quoted, e.g. `UNATTENDED_HEADER_COLOR="#FF5733"`. Node's built-in `--env-file` loader (used by `npm start`) treats an unquoted leading `#` as the start of a comment, so an unquoted value like `UNATTENDED_HEADER_COLOR=#FF5733` silently resolves to an empty string.
+#### Deployment-specific syntax
 
-**Railway (or other platforms that inject env vars directly):** enter the raw value with no quotes, e.g. `#FF5733`. Adding quotes there makes them part of the literal value and causes validation to fail. This also applies to Railway deployments that run the published Docker image directly, since Railway injects Variables straight into the container's environment either way.
+**Local `.env` file (`npm start`, no Docker):** the value must be quoted, e.g. `UNATTENDED_HEADER_COLOR="#FF5733"`. Node's built-in `--env-file` loader treats an unquoted leading `#` as the start of a comment, so an unquoted value like `UNATTENDED_HEADER_COLOR=#FF5733` silently resolves to nothing.
+
+**Railway (or other platforms that inject env vars directly):** enter the raw value with _no_ quotes, e.g. `#FF5733`. Adding quotes there makes them part of the literal value and causes validation to fail. This also applies to Railway deployments that run the published Docker image directly, since Railway injects Variables straight into the container's environment.
 
 **Docker Compose `env_file:` or `docker run --env-file`:** the container's `CMD` runs plain `node server/app.js` (no `--env-file` flag), so Node's quoting quirk above does not apply inside a container. Docker's own env-file parser only treats `#` as a comment when it is the first character of a line, and does not strip surrounding quotes, so the value must be **unquoted**:
 
@@ -164,7 +166,7 @@ environment:
 ### UNATTENDED_CUSTOM_LOGO
 
 URL or local path to your organization's logo.
-The logo will be displayed alongside the "Powered by Transit" logo in the header.
+The logo will be displayed alongside the "Powered by Transit" logo in the header. For best results, we recommend using either a transparent-background PNG or SVG.
 
 #### Local file paths (experimental)
 
@@ -187,9 +189,9 @@ services:
 
 ### UNATTENDED_SHOW_QR_CODE
 
-Show a QR code that opens a Transit "deeplink".
+Show a QR code that opens a Transit "deeplink" (which is a type of link that sends users directly to an app).
 
-This deeplink is in the format of `transitapp.com/deep-links?url=transit://routes?q=${latitude},${longitude}`. If riders don't have Transit installed, it will prompt them to download Transit from their smartphone platform's app store. If they do have Transit installed, it will open Transit at the set coordinates.
+This deeplink is in the format of `transitapp.com/deep-links?url=transit://routes?q=${latitude},${longitude}`. If riders don't have Transit installed, it will prompt them to download Transit from their smartphone platform's app store. If they do have Transit installed, it will open Transit at the coordinates configured on your display.
 
 Options available are _true_ or _false_.
 
