@@ -126,6 +126,22 @@ The default is **auto** if not set.
 
 Column controls are disabled by default in Vertical mode.
 
+### UNATTENDED_VIEW_MODE (v1.6.0 or greater)
+
+Layout mode used to display departures.
+
+Options available are:
+
+- card (default; grid of departure cards)
+- board (table-like layout grouped by stop)
+- vertical (single-column portrait departure board grouped by stop)
+
+The default is **card** if not set.
+
+#### Note on parity with the in-app toggle
+
+Setting `UNATTENDED_VIEW_MODE` alone only changes the layout. Unlike clicking the Board or Vertical button in the Config UI, it does not automatically enable itinerary grouping. To fully match the UI toggle's behavior, also set `UNATTENDED_GROUP_ITINERARIES=true` when using Board or Vertical mode.
+
 ### UNATTENDED_THEME
 
 Theme for background. This will also adjust the shade of green used in the header if the header colour isn't adjusted manually.
@@ -208,6 +224,8 @@ The default is **false** if not set.
 #### Note for version 1.5.0 and above
 
 Stop grouping/grouped itineraries are enabled by default in the Board mode and Vertical mode.
+
+As of v1.6.0, setting `UNATTENDED_VIEW_MODE` does not enable this automatically - set `UNATTENDED_GROUP_ITINERARIES` explicitly if configuring via environment variables.
 
 ### UNATTENDED_FILTER_TERMINUS (v1.3.0 or greater)
 
