@@ -139,7 +139,7 @@ The default is _auto_ if not set.
 Hex color code for header background
 Format: "#RRGGBB" (e.g., #FF5733)
 
-If not set, the header will default to a light green if the theme is _light_ or a dark green if the theme is _dark_.
+If not set, or if set to an invalid value, the header defaults to `#30b566` (a warning is logged to the server console when an invalid value is provided).
 
 ### UNATTENDED_CUSTOM_LOGO
 

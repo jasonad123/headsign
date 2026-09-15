@@ -144,6 +144,24 @@ function validateColumns(columns) {
 }
 
 /**
+ * Validates and returns a safe header color hex value
+ * @param {string} color - The hex color to validate
+ * @returns {string} - Valid hex color or default (#30b566)
+ */
+function validateHeaderColor(color) {
+	var hexPattern = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+	if (hexPattern.test(color)) {
+		return color;
+	}
+	console.warn(
+		'Invalid UNATTENDED_HEADER_COLOR value: ' +
+			color +
+			'. Expected a hex color in "#RRGGBB" or "#RGB" format. Using default: #30b566'
+	);
+	return '#30b566';
+}
+
+/**
  * Validates location format (lat,lng)
  * @param {string} location - The location string to validate
  * @returns {string} - Original location or empty string if invalid
@@ -220,7 +238,7 @@ var all = {
 		timeFormat: validateTimeFormat(process.env.UNATTENDED_TIME_FORMAT || 'HH:mm'),
 		language: validateLanguage(process.env.UNATTENDED_LANGUAGE || 'en'),
 		theme: validateTheme(process.env.UNATTENDED_THEME || 'auto'),
-		headerColor: process.env.UNATTENDED_HEADER_COLOR || '#30b566',
+		headerColor: validateHeaderColor(process.env.UNATTENDED_HEADER_COLOR || '#30b566'),
 		columns: validateColumns(process.env.UNATTENDED_COLUMNS || 'auto'),
 		showQRCode: parseBoolean(process.env.UNATTENDED_SHOW_QR_CODE),
 		maxDistance: validateMaxDistance(parseInt(process.env.UNATTENDED_MAX_DISTANCE) || 500),
