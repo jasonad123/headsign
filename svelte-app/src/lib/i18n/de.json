@@ -130,6 +130,36 @@
 				"save": "Standort speichern",
 				"cancel": "Abbrechen"
 			}
+		},
+		"wizard": {
+			"stepIndicator": "Schritt {{current}} von {{total}}",
+			"welcome": {
+				"title": "Willkommen bei Headsign",
+				"subtitle": "Lass uns dein Display einrichten. Das dauert nur eine Minute.",
+				"languageLabel": "Wähle deine Sprache"
+			},
+			"location": {
+				"title": "Wo befindet sich dieses Display?",
+				"subtitle": "Headsign zeigt Abfahrten für Verkehrslinien in der Nähe dieses Standorts an."
+			},
+			"display": {
+				"title": "Grundeinstellungen",
+				"subtitle": "Gib deinem Display einen Namen und wähle das Zeitformat."
+			},
+			"layout": {
+				"title": "Layout auswählen",
+				"subtitle": "Du kannst dies jederzeit in den Einstellungen ändern."
+			},
+			"finish": {
+				"title": "Alles bereit",
+				"subtitle": "Überprüfe deine Auswahl unten oder öffne die erweiterten Einstellungen für weitere Optionen."
+			},
+			"buttons": {
+				"next": "Weiter",
+				"back": "Zurück",
+				"finish": "Einrichtung abschließen",
+				"skipToAdvanced": "Stattdessen erweiterte Einstellungen öffnen"
+			}
 		}
 	},
 	"routes": {

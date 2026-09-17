@@ -136,6 +136,36 @@
 			"title": "Credits",
 			"madeWith": "Made with <iconify-icon icon=\"ix:heart-filled\" style=\"color: #e30022; vertical-align: -0.1em;\"></iconify-icon> in Washington, DC by Jason A </br> Originally developed by <a href=\"https://transitapp.com/\" target=\"_blank\" rel=\"noopener\">Transit</a> in <iconify-icon icon=\"fluent-emoji-flat:maple-leaf\" style=\"color: #b53054; vertical-align: -0.2em;\"></iconify-icon> Montreal, QC",
 			"links": "<a href=\"https://github.com/jasonad123/headsign\" target=\"_blank\" rel=\"noopener\">View on GitHub</a> &vert; Powered by the Transit API"
+		},
+		"wizard": {
+			"stepIndicator": "Step {{current}} of {{total}}",
+			"welcome": {
+				"title": "Welcome to Headsign",
+				"subtitle": "Let's get your display set up. This will only take a minute.",
+				"languageLabel": "Choose your language"
+			},
+			"location": {
+				"title": "Where is this display?",
+				"subtitle": "Headsign will show departures for transit routes near this location."
+			},
+			"display": {
+				"title": "Display basics",
+				"subtitle": "Give your display a name and pick how times should be shown."
+			},
+			"layout": {
+				"title": "Choose a layout",
+				"subtitle": "You can change this anytime from settings."
+			},
+			"finish": {
+				"title": "You're all set",
+				"subtitle": "Review your choices below, or open advanced settings for more options."
+			},
+			"buttons": {
+				"next": "Next",
+				"back": "Back",
+				"finish": "Finish setup",
+				"skipToAdvanced": "Open advanced settings instead"
+			}
 		}
 	},
 	"routes": {
