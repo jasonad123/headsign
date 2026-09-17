@@ -130,6 +130,36 @@
 				"save": "Guardar ubicación",
 				"cancel": "Cancelar"
 			}
+		},
+		"wizard": {
+			"stepIndicator": "Paso {{current}} de {{total}}",
+			"welcome": {
+				"title": "Bienvenido a Headsign",
+				"subtitle": "Configuremos tu pantalla. Solo tomará un minuto.",
+				"languageLabel": "Elige tu idioma"
+			},
+			"location": {
+				"title": "¿Dónde está esta pantalla?",
+				"subtitle": "Headsign mostrará las salidas de las rutas de transporte cercanas a esta ubicación."
+			},
+			"display": {
+				"title": "Ajustes básicos de la pantalla",
+				"subtitle": "Ponle un nombre a tu pantalla y elige cómo se mostrará la hora."
+			},
+			"layout": {
+				"title": "Elige un diseño",
+				"subtitle": "Puedes cambiarlo en cualquier momento desde los ajustes."
+			},
+			"finish": {
+				"title": "Todo listo",
+				"subtitle": "Revisa tus opciones abajo, o abre los ajustes avanzados para más opciones."
+			},
+			"buttons": {
+				"next": "Siguiente",
+				"back": "Atrás",
+				"finish": "Finalizar configuración",
+				"skipToAdvanced": "Abrir ajustes avanzados en su lugar"
+			}
 		}
 	},
 	"routes": {

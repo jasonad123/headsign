@@ -10,6 +10,7 @@
 	import VerticalView from '$lib/components/VerticalView.svelte';
 	import QRCode from '$lib/components/QRCode.svelte';
 	import ConfigModal from '$lib/components/ConfigModal.svelte';
+	import SetupWizard from '$lib/components/SetupWizard.svelte';
 	import type { Route } from '$lib/services/nearby';
 	import {
 		isHighPriorityMode,
@@ -1017,8 +1018,22 @@
 		</table>
 	</header>
 
+	<SetupWizard
+		open={$config.isEditing && $config.isFirstRun}
+		{gettingLocation}
+		{locationError}
+		{validatingLocation}
+		{validationMessage}
+		{validationSuccess}
+		{appVersion}
+		onclose={closeConfig}
+		{useCurrentLocation}
+		{handleLocationInputBlur}
+		onfinish={handleConfigSave}
+	/>
+
 	<ConfigModal
-		open={$config.isEditing}
+		open={$config.isEditing && !$config.isFirstRun}
 		{allRoutes}
 		{gettingLocation}
 		{locationError}
