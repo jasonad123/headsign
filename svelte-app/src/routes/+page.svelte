@@ -1017,8 +1017,22 @@
 		</table>
 	</header>
 
+	<SetupWizard
+		open={$config.isEditing && $config.isFirstRun}
+		{gettingLocation}
+		{locationError}
+		{validatingLocation}
+		{validationMessage}
+		{validationSuccess}
+		{appVersion}
+		onclose={closeConfig}
+		{useCurrentLocation}
+		{handleLocationInputBlur}
+		onfinish={handleConfigSave}
+	/>
+
 	<ConfigModal
-		open={$config.isEditing}
+		open={$config.isEditing && !$config.isFirstRun}
 		{allRoutes}
 		{gettingLocation}
 		{locationError}
