@@ -130,6 +130,36 @@
 				"save": "Enregistrer",
 				"cancel": "Annuler"
 			}
+		},
+		"wizard": {
+			"stepIndicator": "Étape {{current}} sur {{total}}",
+			"welcome": {
+				"title": "Bienvenue sur Télé Transit",
+				"subtitle": "Configurons votre écran. Cela ne prendra qu'une minute.",
+				"languageLabel": "Choisissez votre langue"
+			},
+			"location": {
+				"title": "Où se trouve cet écran ?",
+				"subtitle": "Télé Transit affichera les départs des lignes de transport à proximité de cet emplacement."
+			},
+			"display": {
+				"title": "Paramètres d'affichage de base",
+				"subtitle": "Donnez un nom à votre écran et choisissez le format de l'heure."
+			},
+			"layout": {
+				"title": "Choisissez une disposition",
+				"subtitle": "Vous pourrez modifier ce choix à tout moment dans les paramètres."
+			},
+			"finish": {
+				"title": "Tout est prêt",
+				"subtitle": "Vérifiez vos choix ci-dessous, ou ouvrez les paramètres avancés pour plus d'options."
+			},
+			"buttons": {
+				"next": "Suivant",
+				"back": "Précédent",
+				"finish": "Terminer la configuration",
+				"skipToAdvanced": "Ouvrir les paramètres avancés à la place"
+			}
 		}
 	},
 	"routes": {

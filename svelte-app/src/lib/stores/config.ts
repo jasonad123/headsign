@@ -10,6 +10,7 @@ export interface LatLng {
 export interface Config {
 	id: string;
 	isEditing: boolean;
+	isFirstRun: boolean;
 	title: string;
 	routeOrder: string[];
 	stopOrder: string[];
@@ -38,6 +39,7 @@ export interface Config {
 const defaultConfig: Config = {
 	id: '',
 	isEditing: true,
+	isFirstRun: true,
 	title: '',
 	routeOrder: [],
 	stopOrder: [],
@@ -124,7 +126,8 @@ function createConfigStore() {
 							...parsed,
 							// Ensure viewMode is set (migration for old configs)
 							viewMode: parsed.viewMode || defaultConfig.viewMode,
-							isEditing: false
+							isEditing: false,
+							isFirstRun: false
 						});
 
 						// Save migrated config back to cookies
@@ -185,7 +188,8 @@ function createConfigStore() {
 						set({
 							...defaultConfig,
 							...unattendedConfig,
-							isEditing: false
+							isEditing: false,
+							isFirstRun: false
 						});
 
 						// Save migrated unattended config to cookies for persistence
@@ -212,6 +216,7 @@ function createConfigStore() {
 			const current = get({ subscribe });
 			const toSave = { ...current };
 			delete (toSave as Partial<Config>).isEditing;
+			delete (toSave as Partial<Config>).isFirstRun;
 
 			try {
 				// Use cookies for better kiosk mode persistence
