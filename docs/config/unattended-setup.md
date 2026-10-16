@@ -138,9 +138,9 @@ Options available are:
 
 The default is **card** if not set.
 
-#### Note on parity with the in-app toggle
+#### Note on the in-app toggle
 
-Setting `UNATTENDED_VIEW_MODE` alone only changes the layout. Unlike clicking the Board or Vertical button in the Config UI, it does not automatically enable itinerary grouping. To fully match the UI toggle's behavior, also set `UNATTENDED_GROUP_ITINERARIES=true` when using Board or Vertical mode.
+Setting just `UNATTENDED_VIEW_MODE` only changes the layout in Headsign, but does't automatically enable itinerary grouping like if you changed it in the config panel. To match the UI set `UNATTENDED_GROUP_ITINERARIES=true` when using Board or Vertical mode.
 
 ### UNATTENDED_THEME
 
@@ -221,7 +221,7 @@ Options available are _true_ or _false_, which leaves departures ungrouped.
 
 The default is **false** if not set.
 
-#### Note for version 1.5.0 and above
+#### Note
 
 Stop grouping/grouped itineraries are enabled by default in the Board mode and Vertical mode.
 
