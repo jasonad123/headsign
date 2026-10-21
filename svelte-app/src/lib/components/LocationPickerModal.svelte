@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { browser } from '$app/env';
-	import { t } from '$lib/i18n';
+	import { t } from '#lib/i18n/index.js';
 	import { untrack } from 'svelte';
-	import { config } from '$lib/stores/config';
-	import type { LatLng } from '$lib/stores/config';
+	import { config } from '#lib/stores/config.js';
+	import type { LatLng } from '#lib/stores/config.js';
 	import 'iconify-icon';
 
 	// Leaflet is imported dynamically to avoid SSR issues

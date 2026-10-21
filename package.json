@@ -1,37 +1,37 @@
 {
-  "name": "headsign-server",
-  "version": "1.6.0",
-  "main": "server/app.js",
-  "dependencies": {
-    "compression": "^1.8.2",
-    "cookie-parser": "~1.4.7",
-    "ejs": "~6.0.1",
-    "errorhandler": "~1.5.2",
-    "express": "^5.3.0",
-    "helmet": "^8.3.0",
-    "morgan": "^1.12.1",
-    "pino": "^10.4.0",
-    "pino-http": "^11.0.0"
-  },
-  "scripts": {
-    "start": "node --env-file=.env server/app.js",
-    "build": "cd svelte-app && pnpm install && pnpm build",
-    "start-auth": "op run --env-file=\"./.env.local\" pnpm start",
-    "clean": "rm -rf node_modules svelte-app/node_modules svelte-app/.svelte-kit",
-    "format": "prettier --write .",
-    "lint": "prettier --check .",
-    "version:bump": "node scripts/bump-version.js"
-  },
-  "engines": {
-    "node": ">=24.0.0"
-  },
-  "packageManager": "pnpm@11.28.6",
-  "private": true,
-  "devDependencies": {
-    "@playwright/test": "^1.64.1",
-    "@types/node": "^24.19.2",
-    "pino-pretty": "^13.2.0",
-    "prettier": "^3.9.10",
-    "prettier-plugin-svelte": "^4.1.1"
-  }
+	"name": "headsign-server",
+	"version": "1.6.0",
+	"main": "server/app.js",
+	"dependencies": {
+		"compression": "^1.8.2",
+		"cookie-parser": "~1.4.7",
+		"ejs": "~6.0.1",
+		"errorhandler": "~1.5.2",
+		"express": "^5.3.0",
+		"helmet": "^8.3.0",
+		"morgan": "^1.12.1",
+		"pino": "^10.4.0",
+		"pino-http": "^11.0.0"
+	},
+	"scripts": {
+		"start": "node --env-file=.env server/app.js",
+		"build": "cd svelte-app && pnpm install && pnpm build",
+		"start-auth": "op run --env-file=\"./.env.local\" pnpm start",
+		"clean": "rm -rf node_modules svelte-app/node_modules svelte-app/.svelte-kit",
+		"format": "prettier --write .",
+		"lint": "prettier --check .",
+		"version:bump": "node scripts/bump-version.js"
+	},
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"packageManager": "pnpm@11.28.6",
+	"private": true,
+	"devDependencies": {
+		"@playwright/test": "^1.64.1",
+		"@types/node": "^24.19.2",
+		"pino-pretty": "^13.2.0",
+		"prettier": "^3.9.10",
+		"prettier-plugin-svelte": "^4.1.1"
+	}
 }

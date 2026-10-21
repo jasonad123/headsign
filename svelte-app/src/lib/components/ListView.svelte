@@ -1,19 +1,19 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { t } from '$lib/i18n';
+	import { t } from '#lib/i18n/index.js';
 	import RouteIcon from './RouteIcon.svelte';
-	import type { Route, Itinerary, ScheduleItem } from '$lib/services/nearby';
-	import { getMinutesUntil } from '$lib/utils/timeUtils';
-	import { shouldShowDeparture } from '$lib/utils/departureFilters';
-	import { parseAlertContent, extractImageId } from '$lib/services/alerts';
-	import { config } from '$lib/stores/config';
+	import type { Route, Itinerary, ScheduleItem } from '#lib/services/nearby.js';
+	import { getMinutesUntil } from '#lib/utils/timeUtils.js';
+	import { shouldShowDeparture } from '#lib/utils/departureFilters.js';
+	import { parseAlertContent, extractImageId } from '#lib/services/alerts.js';
+	import { config } from '#lib/stores/config.js';
 	import {
 		isHighPriorityMode,
 		haversineDistance,
 		mergeProximateStopGroups,
 		PRIORITY_MODE_ELEVATION_METERS
-	} from '$lib/utils/sortingUtils';
-	import QRCode from '$lib/components/QRCode.svelte';
+	} from '#lib/utils/sortingUtils.js';
+	import QRCode from '#lib/components/QRCode.svelte';
 
 	let {
 		routes,

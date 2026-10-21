@@ -2,7 +2,7 @@
  * Departure filtering utilities for Headsign
  */
 
-import type { ScheduleItem } from '$lib/services/nearby';
+import type { ScheduleItem } from '#lib/services/nearby.js';
 import { getMinutesUntil } from './timeUtils';
 
 /**

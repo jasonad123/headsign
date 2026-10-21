@@ -1,4 +1,4 @@
-import type { Itinerary, ScheduleItem } from '$lib/services/nearby';
+import type { Itinerary, ScheduleItem } from '#lib/services/nearby.js';
 
 /**
  * Parse variant ID from trip_search_key.

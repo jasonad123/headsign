@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { browser } from '$app/env';
-	import type { Route } from '$lib/services/nearby';
-	import { getRelativeLuminance, getContrastRatio } from '$lib/utils/colorUtils';
+	import type { Route } from '#lib/services/nearby.js';
+	import { getRelativeLuminance, getContrastRatio } from '#lib/utils/colorUtils.js';
 	import {
 		COMPLEX_LOGOS,
 		COLOR_OVERRIDES,
 		ROUTE_COLOR_OVERRIDES
-	} from '$lib/constants/routeOverrides';
+	} from '#lib/constants/routeOverrides.js';
 
 	let {
 		route,

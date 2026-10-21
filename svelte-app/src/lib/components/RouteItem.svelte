@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { t } from '$lib/i18n';
+	import { t } from '#lib/i18n/index.js';
 	import { browser } from '$app/env';
-	import { config } from '$lib/stores/config';
-	import type { Route, ScheduleItem, Itinerary } from '$lib/services/nearby';
-	import { parseAlertContent, extractImageId } from '$lib/services/alerts';
-	import { getMinutesUntil } from '$lib/utils/timeUtils';
-	import { shouldShowDeparture } from '$lib/utils/departureFilters';
+	import { config } from '#lib/stores/config.js';
+	import type { Route, ScheduleItem, Itinerary } from '#lib/services/nearby.js';
+	import { parseAlertContent, extractImageId } from '#lib/services/alerts.js';
+	import { getMinutesUntil } from '#lib/utils/timeUtils.js';
+	import { shouldShowDeparture } from '#lib/utils/departureFilters.js';
 
 	let { route, showLongName = false }: { route: Route; showLongName?: boolean } = $props();
 

@@ -10,10 +10,7 @@ export default defineConfig({
 	plugins: [
 		sveltekit({
 			preprocess: vitePreprocess(),
-			adapter: adapter(),
-			// $lib was removed in SvelteKit 3 (replaced by #lib); keep the alias to
-			// avoid rewriting every import
-			alias: { $lib: 'src/lib' }
+			adapter: adapter()
 		})
 	],
 

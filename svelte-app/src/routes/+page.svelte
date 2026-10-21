@@ -1,21 +1,21 @@
 <script lang="ts">
 	import { onMount, onDestroy, untrack } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { t } from '$lib/i18n';
+	import { t } from '#lib/i18n/index.js';
 	import { browser } from '$app/env';
-	import { config } from '$lib/stores/config';
-	import { findNearbyRoutes } from '$lib/services/nearby';
-	import RouteItem from '$lib/components/RouteItem.svelte';
-	import ListView from '$lib/components/ListView.svelte';
-	import VerticalView from '$lib/components/VerticalView.svelte';
-	import QRCode from '$lib/components/QRCode.svelte';
-	import ConfigModal from '$lib/components/ConfigModal.svelte';
-	import type { Route } from '$lib/services/nearby';
+	import { config } from '#lib/stores/config.js';
+	import { findNearbyRoutes } from '#lib/services/nearby.js';
+	import RouteItem from '#lib/components/RouteItem.svelte';
+	import ListView from '#lib/components/ListView.svelte';
+	import VerticalView from '#lib/components/VerticalView.svelte';
+	import QRCode from '#lib/components/QRCode.svelte';
+	import ConfigModal from '#lib/components/ConfigModal.svelte';
+	import type { Route } from '#lib/services/nearby.js';
 	import {
 		isHighPriorityMode,
 		haversineDistance,
 		PRIORITY_MODE_ELEVATION_METERS
-	} from '$lib/utils/sortingUtils';
+	} from '#lib/utils/sortingUtils.js';
 	import 'iconify-icon';
 	let routes = $state<Route[]>([]);
 	let allRoutes = $state<Route[]>([]);

@@ -1,5 +1,5 @@
 import type { LayoutServerLoad } from './$types';
-import { initI18n, isSupportedLng, fallbackLng, type SupportedLng } from '$lib/i18n';
+import { initI18n, isSupportedLng, fallbackLng, type SupportedLng } from '#lib/i18n/index.js';
 
 function resolveLocale(rawCookie: string | undefined): SupportedLng {
 	if (!rawCookie) return fallbackLng;
