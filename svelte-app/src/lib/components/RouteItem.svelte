@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { t } from '$lib/i18n';
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import { config } from '$lib/stores/config';
 	import type { Route, ScheduleItem, Itinerary } from '$lib/services/nearby';
 	import { parseAlertContent, extractImageId } from '$lib/services/alerts';

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import { t } from '$lib/i18n';
 	import { untrack } from 'svelte';
 	import { config } from '$lib/stores/config';

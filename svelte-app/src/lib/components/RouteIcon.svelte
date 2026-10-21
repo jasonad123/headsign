@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import type { Route } from '$lib/services/nearby';
 	import { getRelativeLuminance, getContrastRatio } from '$lib/utils/colorUtils';
 	import {

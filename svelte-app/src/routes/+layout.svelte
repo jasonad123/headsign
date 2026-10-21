@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { config } from '$lib/stores/config';
 	import { onMount, onDestroy } from 'svelte';
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import { initI18n, setLocale, t, type SupportedLng } from '$lib/i18n';
 	import '../app.css';
 	import 'iconify-icon';

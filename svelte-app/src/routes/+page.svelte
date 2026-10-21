@@ -2,7 +2,7 @@
 	import { onMount, onDestroy, untrack } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { t } from '$lib/i18n';
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import { config } from '$lib/stores/config';
 	import { findNearbyRoutes } from '$lib/services/nearby';
 	import RouteItem from '$lib/components/RouteItem.svelte';

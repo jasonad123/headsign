@@ -1,11 +1,21 @@
 import { readFileSync } from 'node:fs';
+import adapter from '@sveltejs/adapter-node';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { defineConfig } from 'vite';
 
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 
 export default defineConfig({
-	plugins: [sveltekit()],
+	plugins: [
+		sveltekit({
+			preprocess: vitePreprocess(),
+			adapter: adapter(),
+			// $lib was removed in SvelteKit 3 (replaced by #lib); keep the alias to
+			// avoid rewriting every import
+			alias: { $lib: 'src/lib' }
+		})
+	],
 
 	define: {
 		__APP_VERSION__: JSON.stringify(pkg.version)
