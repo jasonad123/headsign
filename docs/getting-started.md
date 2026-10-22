@@ -24,13 +24,19 @@ You'll need display hardware to show the Headsign interface. Options range from:
 
 ## Deployment Options
 
-### Option 1: One-Click Deployment (Railway) - Recommended for Most Users
+### Option 1: One-Click Deployment (Railway)
 
 **Best for**: Organizations comfortable with cloud PaaS platforms and looking for quickest setup
 
 Railway provides a one-click deployment experience:
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/kYRHes?referralCode=9qzudG&utm_medium=integration&utm_source=template&utm_campaign=generic)
+
+> **Security notice (2026-10-21):** Railway reported a platform security
+> incident affecting stored environment variables. If you deployed Headsign
+> on Railway, rotate your Transit API key and any other secrets stored
+> there. See [Railway's status page](https://status.railway.com/incident/QH8L8B3E)
+> for details and guidance.
 
 **What happens when you click**:
 
@@ -74,11 +80,7 @@ Railway provides a one-click deployment experience:
 
 **Best for**: Organizations preferring other PaaS providers or needing specific features
 
-Headsign works with any Docker-compatible PaaS platform. Currently it has only been tested and deployed on Railway and has had test deployments on **Render** and _should_ be supported by **Fly.io**.
-
-- **Railway** - Recommended, full template support
-- **Render** - Good alternative, straightforward setup with template support
-- **Fly.io** - Global edge deployment, good for multi-location agencies
+Headsign works with any Docker-compatible PaaS platform, such as Railway or Render. Both Railway and Render have full template support for Headsign, but it should be compatible with similar platforms like Fly.io.
 
 #### General Setup Steps
 
