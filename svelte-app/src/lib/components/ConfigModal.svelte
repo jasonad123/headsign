@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { t } from '$lib/i18n';
-	import { config } from '$lib/stores/config';
-	import { formatCoordinatesForDisplay } from '$lib/utils/formatters';
-	import Toggle from '$lib/components/Toggle.svelte';
-	import CollapsibleSection from '$lib/components/CollapsibleSection.svelte';
-	import SolidSection from '$lib/components/SolidSection.svelte';
-	import LocationPickerModal from '$lib/components/LocationPickerModal.svelte';
-	import type { Route } from '$lib/services/nearby';
-	import type { LatLng } from '$lib/stores/config';
+	import { t } from '#lib/i18n/index.js';
+	import { config } from '#lib/stores/config.js';
+	import { formatCoordinatesForDisplay } from '#lib/utils/formatters.js';
+	import Toggle from '#lib/components/Toggle.svelte';
+	import CollapsibleSection from '#lib/components/CollapsibleSection.svelte';
+	import SolidSection from '#lib/components/SolidSection.svelte';
+	import LocationPickerModal from '#lib/components/LocationPickerModal.svelte';
+	import type { Route } from '#lib/services/nearby.js';
+	import type { LatLng } from '#lib/stores/config.js';
 	import 'iconify-icon';
 
 	interface Props {

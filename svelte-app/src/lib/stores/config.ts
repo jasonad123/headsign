@@ -1,6 +1,6 @@
 import { get, writable } from 'svelte/store';
-import { browser } from '$app/environment';
-import { getCookie, setCookie } from '$lib/utils/cookies';
+import { browser } from '$app/env';
+import { getCookie, setCookie } from '#lib/utils/cookies.js';
 
 export interface LatLng {
 	latitude: number;
