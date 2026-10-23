@@ -3,12 +3,13 @@
 	import { t } from '#lib/i18n/index.js';
 	import { browser } from '$app/env';
 	import { config } from '#lib/stores/config.js';
-	import type { Route, ScheduleItem, Itinerary } from '#lib/services/nearby.js';
+	import type { Route, ScheduleItem, Itinerary, CrowdingMap } from '#lib/services/nearby.js';
+	import CrowdingIcon from '#lib/components/CrowdingIcon.svelte';
 	import { parseAlertContent, extractImageId } from '#lib/services/alerts.js';
 	import { getMinutesUntil } from '#lib/utils/timeUtils.js';
 	import { shouldShowDeparture } from '#lib/utils/departureFilters.js';
 
-	let { route, showLongName = false }: { route: Route; showLongName?: boolean } = $props();
+	let { route, showLongName = false, crowdingMap }: { route: Route; showLongName?: boolean; crowdingMap?: CrowdingMap } = $props();
 
 	let useBlackText = $derived(route.route_text_color === '000000');
 	let cellStyle = $derived(`background: #${route.route_color}; color: #${route.route_text_color}`);
@@ -1055,6 +1056,11 @@
 										<i class="realtime"></i>
 									{/if}
 									<small class:last={item.is_last}>{item.is_last ? 'last' : 'min'}</small>
+									{#if crowdingMap && item.rt_trip_id}
+										<span class="crowding-wrap">
+											<CrowdingIcon level={crowdingMap.get(item.rt_trip_id)} />
+										</span>
+									{/if}
 								</h4>
 							{/each}
 							{#each Array(Math.max(0, 3 - (dir.schedule_items?.filter(shouldShowDeparture).length || 0))) as _}
@@ -1495,6 +1501,17 @@
 		padding: 0.4em 0;
 		text-align: center;
 		box-sizing: border-box;
+	}
+
+	.route .time h4 :global(.crowding-badge) {
+		font-size: 0.5em;
+	}
+
+	.route .time h4 .crowding-wrap {
+		display: block;
+		text-align: center;
+		margin-top: -0.2em;
+		margin-bottom: -0.1em;
 	}
 
 	.route .time h4 span.cancelled {
