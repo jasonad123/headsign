@@ -5,12 +5,18 @@
 	import { browser } from '$app/env';
 	import { config } from '#lib/stores/config.js';
 	import { findNearbyRoutes } from '#lib/services/nearby.js';
+	import {
+		crowdingStore,
+		startCrowdingPolling,
+		updateCrowdingRoutes,
+		stopCrowdingPolling
+	} from '#lib/services/crowding.js';
 	import RouteItem from '#lib/components/RouteItem.svelte';
 	import ListView from '#lib/components/ListView.svelte';
 	import VerticalView from '#lib/components/VerticalView.svelte';
 	import QRCode from '#lib/components/QRCode.svelte';
 	import ConfigModal from '#lib/components/ConfigModal.svelte';
-	import type { Route } from '#lib/services/nearby.js';
+	import type { Route, CrowdingMap } from '#lib/services/nearby.js';
 	import {
 		isHighPriorityMode,
 		haversineDistance,
@@ -723,6 +729,11 @@
 			await loadNearby();
 			// Use adaptive polling interval (starts at 20s)
 			intervalId = setInterval(loadNearby, currentPollingInterval);
+
+			// Start crowding polling if enabled
+			if ($config.showCrowding && routes.length > 0) {
+				startCrowdingPolling(routes);
+			}
 		}
 
 		// Update clock every second
@@ -750,6 +761,28 @@
 				loadNearby();
 				intervalId = setInterval(loadNearby, currentPollingInterval);
 			}
+		}
+	});
+
+	// Start/stop crowding polling when toggle or editing state changes
+	$effect(() => {
+		const enabled = $config.showCrowding;
+		const editing = $config.isEditing;
+
+		if (enabled && !editing) {
+			startCrowdingPolling(untrack(() => routes));
+		} else {
+			stopCrowdingPolling();
+			if (!enabled) {
+				crowdingStore.set(new Map());
+			}
+		}
+	});
+
+	// Pass fresh route data to crowding service without restarting the poll
+	$effect(() => {
+		if (routes.length > 0 && $config.showCrowding) {
+			updateCrowdingRoutes(routes);
 		}
 	});
 
@@ -851,6 +884,7 @@
 	});
 
 	onDestroy(() => {
+		stopCrowdingPolling();
 		if (intervalId) {
 			clearInterval(intervalId);
 		}
@@ -1139,7 +1173,7 @@
 			>
 				{#each displayRoutes as route, index (`${route.global_route_id}-${route._splitIndex ?? 0}`)}
 					<div class="route-wrapper" transition:fade={{ duration: 300 }}>
-						<RouteItem {route} showLongName={$config.showRouteLongName} />
+						<RouteItem {route} showLongName={$config.showRouteLongName} crowdingMap={$config.showCrowding ? $crowdingStore : undefined} />
 						{#if route._splitIndex !== undefined && route._totalSplits !== undefined}
 							<div class="route-split-badge">
 								{route._splitIndex + 1}/{route._totalSplits}
