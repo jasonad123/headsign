@@ -49,6 +49,7 @@
 
 	// App version state
 	let appVersion = $state<string>(__APP_VERSION__);
+	let appCodename = $state<string>(__APP_CODENAME__);
 
 	// Auto-scale state
 	let contentScale = $state(1.0);
@@ -711,6 +712,7 @@
 			if (healthResponse.ok) {
 				const healthData = await healthResponse.json();
 				appVersion = healthData.version || __APP_VERSION__;
+				appCodename = healthData.codename ?? __APP_CODENAME__;
 			}
 		} catch (err) {
 			// Version fetch failed, using fallback
@@ -1054,6 +1056,7 @@
 		{validationSuccess}
 		{columnsWarning}
 		{appVersion}
+		{appCodename}
 		{contentScale}
 		onclose={closeConfig}
 		{useCurrentLocation}

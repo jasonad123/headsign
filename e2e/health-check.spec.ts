@@ -23,6 +23,7 @@ test.describe('Health Check Endpoint', () => {
 		expect(body).toHaveProperty('status');
 		expect(body).toHaveProperty('timestamp');
 		expect(body).toHaveProperty('version');
+		expect(body).toHaveProperty('codename');
 		expect(body).toHaveProperty('uptime');
 		expect(body).toHaveProperty('environment');
 	});
