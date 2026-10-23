@@ -18,6 +18,12 @@ This directory contains Playwright-based E2E tests for Headsign.
    - ⚠️ Requires manual setup (see below)
    - Tests filtering of redundant terminus destinations
 
+## Continuous Integration
+
+Pull requests and pushes to `main` run these tests on Chromium via `.github/workflows/playwright.yml`. Playwright starts the built app itself (`webServer` in `playwright.config.ts`) with a dummy API key, so specs in CI must mock Transit API responses. The manual-setup specs (`stop-grouping`, `terminus-filtering`) are skipped when `CI` is set.
+
+To reproduce locally: `cd svelte-app && pnpm build`, then `CI=1 pnpm exec playwright test --project=chromium` from the repo root.
+
 ## Quick Start
 
 ### Prerequisites
