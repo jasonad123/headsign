@@ -9,7 +9,7 @@ Headsign can show vehicle occupancy icons on real-time departures.
 
 ## Enabling
 
-Turn on **Show crowding indicators** in the configuration modal.
+Turn on **Show crowding indicators** in the configuration modal, or set `UNATTENDED_SHOW_CROWDING=true` for [unattended setups](unattended-setup.md#unattended_show_crowding-v170-or-greater).
 
 ## How it works
 

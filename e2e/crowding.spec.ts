@@ -123,6 +123,48 @@ for (const viewMode of ['board', 'vertical']) {
 	});
 }
 
+test.describe('Unattended setup (UNATTENDED_SHOW_CROWDING)', () => {
+	for (const showCrowding of [true, false]) {
+		test(`showCrowding=${showCrowding} from the unattended config ${showCrowding ? 'shows' : 'hides'} icons`, async ({
+			page
+		}) => {
+			// No saved user config, so the app falls back to the unattended endpoint
+			await page.route('**/api/config/unattended', (route) =>
+				route.fulfill({
+					json: {
+						enabled: true,
+						latLng: { latitude: 40.758, longitude: -73.9855 },
+						title: '',
+						timeFormat: 'HH:mm',
+						language: 'en',
+						theme: 'auto',
+						headerColor: '#30b566',
+						columns: 'auto',
+						viewMode: 'card',
+						showQRCode: false,
+						maxDistance: 500,
+						customLogo: null,
+						groupItinerariesByStop: false,
+						filterRedundantTerminus: false,
+						showRouteLongName: false,
+						showCrowding
+					}
+				})
+			);
+			await page.route('**/api/routes/nearby*', (route) =>
+				route.fulfill({ json: nearbyFixture() })
+			);
+			await page.route('**/api/vehicles*', (route) =>
+				route.fulfill({ json: { occupancy: { [TRIPS.crowded]: 3 } } })
+			);
+			await page.goto(BASE_URL);
+
+			await expect(page.locator('.route').first()).toBeVisible();
+			await expect(page.locator('.crowding-badge')).toHaveCount(showCrowding ? 1 : 0);
+		});
+	}
+});
+
 test.describe('Vehicles API', () => {
 	test('rejects requests without global_route_id', async ({ request }) => {
 		const response = await request.get(`${BASE_URL}/api/vehicles`);
