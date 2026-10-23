@@ -666,7 +666,7 @@
 							target="_blank"
 							rel="noopener">{appVersion}</a
 						>{#if appCodename}
-							'{appCodename}'{/if}
+							{' '}{appCodename}{/if}
 					</h4>
 					<p class="help-text">
 						{@html t('config.credits.madeWith')}
