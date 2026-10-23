@@ -90,6 +90,10 @@
 			"vertical": "Vertikal",
 			"viewModeHelpText": "Wählen Sie zwischen Kartenmodus (Standard, routenzentrierte Querformatansicht), Tafelmodus (nach Haltestelle gruppierte Querformat-Abfahrtstafel für Nahbetrachtung) oder Vertikalmodus (Hochformat-Abfahrtstafel nach Haltestelle gruppiert)."
 		},
+		"crowding": {
+			"showCrowding": "Auslastungsanzeige einblenden",
+			"showCrowdingHelpText": "Zeigt Auslastungssymbole bei Echtzeit-Abfahrten an (sofern vom Verkehrsunternehmen bereitgestellt)"
+		},
 		"scaleMode": {
 			"auto": "Auto",
 			"manual": "Manuell",
@@ -154,7 +158,12 @@
 		"moveRouteUp": "Aufsteigen",
 		"moveRouteDown": "Absteigen",
 		"hideRoute": "Verstecken routen",
-		"hideStop": "Haltestelle ausblenden"
+		"hideStop": "Haltestelle ausblenden",
+		"crowding": {
+			"notCrowded": "Geringe Auslastung",
+			"someCrowding": "Mittlere Auslastung",
+			"crowded": "Hohe Auslastung"
+		}
 	},
 	"stops": {
 		"distance": {

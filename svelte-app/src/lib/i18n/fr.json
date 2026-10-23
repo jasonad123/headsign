@@ -90,6 +90,10 @@
 			"vertical": "Vertical",
 			"viewModeHelpText": "Sélectionnez entre le mode Carte (par défaut, vue paysage centree sur les lignes), le mode Tableau (tableau paysage groupe par arret pour visualisation rapprochee) ou le mode Vertical (tableau de departs portrait groupe par arret)."
 		},
+		"crowding": {
+			"showCrowding": "Afficher les indicateurs d'affluence",
+			"showCrowdingHelpText": "Affiche des icônes d'affluence sur les départs en temps réel (si fournis par votre opérateur de transport)"
+		},
 		"scaleMode": {
 			"auto": "Auto",
 			"manual": "Manuel",
@@ -154,7 +158,12 @@
 		"moveRouteUp": "Déplacer la ligne vers le haut",
 		"moveRouteDown": "Déplacer la ligne vers le bas",
 		"hideRoute": "Masquer la ligne",
-		"hideStop": "Masquer l'arrêt"
+		"hideStop": "Masquer l'arrêt",
+		"crowding": {
+			"notCrowded": "Affluence faible",
+			"someCrowding": "Affluence modérée",
+			"crowded": "Affluence élevée"
+		}
 	},
 	"stops": {
 		"distance": {
