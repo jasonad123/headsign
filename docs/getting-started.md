@@ -12,6 +12,8 @@ Regardless of deployment method, you'll need an API key from Transit:
   - **For testing or very limited use**: The default free tier **should be adequate**
   - **For production deployments**: You'll need a paid tier API key
 
+Current keys are prefixed `transit_publicapi_v4_`. Optional features such as [crowding indicators](config/crowding.md) require a v4 key.
+
 **Transit partners**: If your agency subscribes to Transit Royale or has other relationships with Transit, contact your account representative for API access information.
 
 ### Display Hardware
