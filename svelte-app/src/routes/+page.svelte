@@ -1127,6 +1127,7 @@
 					stopOrder={$config.stopOrder || []}
 					showLongName={$config.showRouteLongName}
 					showQRCode={$config.showQRCode && !$config.isEditing}
+					crowdingMap={$config.showCrowding ? $crowdingStore : undefined}
 					onMoveStop={moveStop}
 					onMoveStopToTop={moveStopToTop}
 					onHideRoute={toggleRouteHidden}
@@ -1145,6 +1146,7 @@
 					stopOrder={$config.stopOrder || []}
 					showLongName={$config.showRouteLongName}
 					showQRCode={$config.showQRCode && !$config.isEditing}
+					crowdingMap={$config.showCrowding ? $crowdingStore : undefined}
 					onMoveStop={moveStop}
 					onMoveStopToTop={moveStopToTop}
 					onHideRoute={toggleRouteHidden}
