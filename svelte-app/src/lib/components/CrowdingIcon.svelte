@@ -17,10 +17,7 @@
 {#if level != null && level >= 1 && level <= 3}
 	<span class="crowding-badge" aria-label={ariaLabel} title={ariaLabel}>
 		{#each [1, 2, 3] as i (i)}
-			<iconify-icon
-				icon="mdi:account"
-				class="crowding-person"
-				class:filled={i <= filledCount}
+			<iconify-icon icon="mdi:account" class="crowding-person" class:filled={i <= filledCount}
 			></iconify-icon>
 		{/each}
 	</span>

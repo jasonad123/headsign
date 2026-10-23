@@ -60,9 +60,7 @@ async function setup(
 		[opts.showCrowding, opts.viewMode ?? 'card'] as const
 	);
 
-	await page.route('**/api/routes/nearby*', (route) =>
-		route.fulfill({ json: nearbyFixture() })
-	);
+	await page.route('**/api/routes/nearby*', (route) => route.fulfill({ json: nearbyFixture() }));
 	await page.route('**/api/vehicles*', (route) =>
 		route.fulfill({ json: { occupancy: opts.occupancy ?? {} } })
 	);
