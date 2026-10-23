@@ -440,8 +440,14 @@
 	function moveRouteToTop(index: number) {
 		if (index === 0) return;
 
+		// index is a displayRoutes (card) index; split routes span several cards
+		const target = displayRoutes[index];
+		if (!target) return;
+		const routeIndex = routes.findIndex((r) => r.global_route_id === target.global_route_id);
+		if (routeIndex <= 0) return;
+
 		const newRoutes = [...routes];
-		const [movedRoute] = newRoutes.splice(index, 1);
+		const [movedRoute] = newRoutes.splice(routeIndex, 1);
 		newRoutes.unshift(movedRoute);
 		routes = newRoutes;
 
