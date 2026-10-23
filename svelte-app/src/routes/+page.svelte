@@ -444,7 +444,10 @@
 		if (routeIndex === -1 || targetIndex === -1) return;
 
 		const newRoutes = [...routes];
-		[newRoutes[routeIndex], newRoutes[targetIndex]] = [newRoutes[targetIndex], newRoutes[routeIndex]];
+		[newRoutes[routeIndex], newRoutes[targetIndex]] = [
+			newRoutes[targetIndex],
+			newRoutes[routeIndex]
+		];
 		routes = newRoutes;
 
 		const newOrder = routes.map((r) => r.global_route_id);
