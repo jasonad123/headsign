@@ -13,6 +13,10 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
 	testDir: './e2e',
+	/* Placeholder specs that need manual setup (real API key, test location) */
+	testIgnore: process.env.CI
+		? ['**/stop-grouping.spec.ts', '**/terminus-filtering.spec.ts']
+		: undefined,
 	/* Run tests in files in parallel */
 	fullyParallel: true,
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -22,7 +26,7 @@ export default defineConfig({
 	/* Opt out of parallel tests on CI. */
 	workers: process.env.CI ? 1 : undefined,
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
-	reporter: 'html',
+	reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'html',
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Base URL to use in actions like `await page.goto('')`. */
@@ -68,12 +72,19 @@ export default defineConfig({
 		//   name: 'Google Chrome',
 		//   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
 		// },
-	]
+	],
 
-	/* Run your local dev server before starting the tests */
-	// webServer: {
-	//   command: 'npm run start',
-	//   url: 'http://localhost:3000',
-	//   reuseExistingServer: !process.env.CI,
-	// },
+	/* Start the built app (run `pnpm build` first). Reuses a running server locally. */
+	webServer: {
+		command: 'node server/app.js',
+		url: 'http://localhost:8080/health',
+		reuseExistingServer: !process.env.CI,
+		timeout: 60_000,
+		env: {
+			PORT: '8080',
+			NODE_ENV: 'production',
+			TRANSIT_API_KEY: process.env.TRANSIT_API_KEY || 'test-key-for-ci',
+			SESSION_SECRET: process.env.SESSION_SECRET || 'test-secret-for-ci'
+		}
+	}
 });
