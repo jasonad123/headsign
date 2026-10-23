@@ -16,6 +16,7 @@
 		haversineDistance,
 		PRIORITY_MODE_ELEVATION_METERS
 	} from '#lib/utils/sortingUtils.js';
+	import { getContrastTextColor } from '#lib/utils/colorUtils.js';
 	import 'iconify-icon';
 	let routes = $state<Route[]>([]);
 	let allRoutes = $state<Route[]>([]);
@@ -1004,7 +1005,11 @@
 
 <svelte:window onkeydown={handleKeydown} />
 
-<div class="container" style="--bg-header: {$config.headerColor}">
+<div
+	class="container"
+	style="--bg-header: {$config.headerColor}; --text-header: {$config.headerTextColor ??
+		getContrastTextColor($config.headerColor)}"
+>
 	<header>
 		<table cellpadding="0" cellspacing="0" border="0">
 			<tbody>
@@ -1345,7 +1350,7 @@
 		width: 2em;
 		height: 2em;
 		font-size: 2em;
-		color: #ffffff;
+		color: var(--text-header);
 		transform: translateY(-5%);
 	}
 

@@ -74,6 +74,7 @@ exports.getUnattendedConfig = function (req, res) {
 		language: config.unattendedSetup.language,
 		theme: config.unattendedSetup.theme,
 		headerColor: config.unattendedSetup.headerColor,
+		headerTextColor: config.unattendedSetup.headerTextColor,
 		columns: config.unattendedSetup.columns,
 		viewMode: config.unattendedSetup.viewMode,
 		showQRCode: config.unattendedSetup.showQRCode,
