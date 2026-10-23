@@ -1,8 +1,11 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 /**
- * Card view: "move to top" on a split card (routes with >3 itineraries span
- * several cards) must not corrupt the route list.
+ * Card view route ordering with split cards. Routes with >3 itineraries span
+ * several cards, so card indexes differ from route indexes.
+ *
+ * Fixture: route 1 (6 itineraries -> 2 cards) then route 2 (1 card):
+ *   cards = [R1, R1, R2]
  */
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
@@ -28,28 +31,95 @@ function route(n: number, itineraryCount: number) {
 	};
 }
 
-test('card view: moving a later card of a split route to top does not error', async ({ page }) => {
-	const errors: string[] = [];
-	page.on('pageerror', (e) => errors.push(e.message));
+test.describe('Card view route ordering (split cards)', () => {
+	let errors: string[];
 
-	await page.addInitScript(() => {
-		localStorage.setItem(
-			'config',
-			JSON.stringify({ viewMode: 'card', language: 'en', scaleMode: 'manual' })
+	test.beforeEach(async ({ page }) => {
+		errors = [];
+		page.on('pageerror', (e) => errors.push(e.message));
+
+		await page.addInitScript(() => {
+			localStorage.setItem(
+				'config',
+				JSON.stringify({ viewMode: 'card', language: 'en', scaleMode: 'manual' })
+			);
+		});
+		await page.route('**/api/routes/nearby*', (r) =>
+			r.fulfill({ json: { routes: [route(1, 6), route(2, 2)] } })
 		);
+		await page.goto(BASE_URL);
+		await expect(page.locator('.route-wrapper')).toHaveCount(3);
 	});
-	// 2 routes -> 3 cards (route 1 splits into 2 cards), so card index 2 exceeds routes.length
-	await page.route('**/api/routes/nearby*', (r) =>
-		r.fulfill({ json: { routes: [route(1, 6), route(2, 2)] } })
-	);
-	await page.goto(BASE_URL);
 
-	const cards = page.locator('.route-wrapper');
-	await expect(cards).toHaveCount(3);
+	async function control(page: Page, card: number, title: RegExp) {
+		const wrapper = page.locator('.route-wrapper').nth(card);
+		await wrapper.hover();
+		return wrapper.getByTitle(title);
+	}
 
-	await cards.nth(2).getByTitle(/move.*top/i).click({ force: true });
-	await page.waitForTimeout(800);
+	async function expectOrder(page: Page, order: number[]) {
+		const cards = page.locator('.route-wrapper');
+		for (const [i, n] of order.entries()) {
+			await expect(cards.nth(i)).toContainText(`Dest ${n}-`);
+		}
+		expect(errors).toEqual([]);
+	}
 
-	expect(errors).toEqual([]);
-	await expect(cards).toHaveCount(3);
+	test('move to top on the last card puts its route first', async ({ page }) => {
+		await (await control(page, 2, /move.*top/i)).click();
+		await expectOrder(page, [2, 1, 1]);
+	});
+
+	test('move up on the last card swaps it with the previous route', async ({ page }) => {
+		await (await control(page, 2, /move up/i)).click();
+		await expectOrder(page, [2, 1, 1]);
+	});
+
+	test('move down on the first card swaps the route with the next route', async ({ page }) => {
+		await (await control(page, 0, /move down/i)).click();
+		await expectOrder(page, [2, 1, 1]);
+	});
+
+	test('hides controls that have nowhere to go', async ({ page }) => {
+		// First card: nothing above it
+		await expect(await control(page, 0, /move up/i)).toHaveCount(0);
+		await expect(await control(page, 0, /move.*top/i)).toHaveCount(0);
+		// Second card of the first route: still nothing above it, but R2 is below
+		await expect(await control(page, 1, /move up/i)).toHaveCount(0);
+		await expect(await control(page, 1, /move down/i)).toHaveCount(1);
+		// Last card: nothing below it
+		await expect(await control(page, 2, /move down/i)).toHaveCount(0);
+	});
 });
+
+// Board and vertical views reorder by stop id (not by card index), so split
+// routes don't affect them. Guard against regressions.
+for (const viewMode of ['board', 'vertical']) {
+	test(`${viewMode} view: move stop to top reorders without errors`, async ({ page }) => {
+		const errors: string[] = [];
+		page.on('pageerror', (e) => errors.push(e.message));
+
+		await page.addInitScript((vm) => {
+			localStorage.setItem(
+				'config',
+				JSON.stringify({ viewMode: vm, language: 'en', scaleMode: 'manual' })
+			);
+		}, viewMode);
+		await page.route('**/api/routes/nearby*', (r) =>
+			r.fulfill({ json: { routes: [route(1, 6), route(2, 2)] } })
+		);
+		await page.goto(BASE_URL);
+
+		const names = page.locator('.stop-name');
+		await expect(names).toHaveCount(8);
+		const last = (await names.last().textContent())?.trim();
+		expect(last).toBeTruthy();
+
+		const panel = page.locator('.stop-panel, .stop-group').last();
+		await panel.hover();
+		await panel.getByTitle(/move stop to top/i).click();
+
+		await expect(names.first()).toHaveText(last!);
+		expect(errors).toEqual([]);
+	});
+}

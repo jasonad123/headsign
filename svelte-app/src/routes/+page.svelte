@@ -420,13 +420,31 @@
 		}
 	}
 
+	// Nearest card in the given direction that belongs to a different route.
+	// Card indexes come from displayRoutes, where split routes span several cards.
+	function neighborRouteId(index: number, direction: 'up' | 'down'): string | null {
+		const current = displayRoutes[index];
+		if (!current) return null;
+		const step = direction === 'up' ? -1 : 1;
+		for (let i = index + step; i >= 0 && i < displayRoutes.length; i += step) {
+			if (displayRoutes[i].global_route_id !== current.global_route_id) {
+				return displayRoutes[i].global_route_id;
+			}
+		}
+		return null;
+	}
+
 	function moveRoute(index: number, direction: 'up' | 'down') {
+		const currentId = displayRoutes[index]?.global_route_id;
+		const neighborId = neighborRouteId(index, direction);
+		if (!currentId || !neighborId) return;
+
+		const routeIndex = routes.findIndex((r) => r.global_route_id === currentId);
+		const targetIndex = routes.findIndex((r) => r.global_route_id === neighborId);
+		if (routeIndex === -1 || targetIndex === -1) return;
+
 		const newRoutes = [...routes];
-		const targetIndex = direction === 'up' ? index - 1 : index + 1;
-
-		if (targetIndex < 0 || targetIndex >= newRoutes.length) return;
-
-		[newRoutes[index], newRoutes[targetIndex]] = [newRoutes[targetIndex], newRoutes[index]];
+		[newRoutes[routeIndex], newRoutes[targetIndex]] = [newRoutes[targetIndex], newRoutes[routeIndex]];
 		routes = newRoutes;
 
 		const newOrder = routes.map((r) => r.global_route_id);
@@ -1122,7 +1140,7 @@
 							</div>
 						{/if}
 						<div class="route-controls">
-							{#if index > 0}
+							{#if neighborRouteId(index, 'up')}
 								<button
 									type="button"
 									class="btn-route-control"
@@ -1133,7 +1151,7 @@
 									<iconify-icon icon="ix:double-chevron-up"></iconify-icon>
 								</button>
 							{/if}
-							{#if index > 0}
+							{#if neighborRouteId(index, 'up')}
 								<button
 									type="button"
 									class="btn-route-control"
@@ -1144,7 +1162,7 @@
 									<iconify-icon icon="ix:arrow-up"></iconify-icon>
 								</button>
 							{/if}
-							{#if index < routes.length - 1}
+							{#if neighborRouteId(index, 'down')}
 								<button
 									type="button"
 									class="btn-route-control"
