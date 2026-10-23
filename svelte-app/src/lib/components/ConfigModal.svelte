@@ -21,6 +21,7 @@
 		validationSuccess: boolean | null;
 		columnsWarning: string | null;
 		appVersion: string;
+		appCodename?: string;
 		contentScale: number;
 		onclose: () => void;
 		useCurrentLocation: () => void;
@@ -41,6 +42,7 @@
 		validationSuccess,
 		columnsWarning,
 		appVersion,
+		appCodename = '',
 		contentScale,
 		onclose,
 		useCurrentLocation,
@@ -663,7 +665,8 @@
 							href="https://github.com/jasonad123/headsign/releases/tag/v{appVersion}"
 							target="_blank"
 							rel="noopener">{appVersion}</a
-						>
+						>{#if appCodename}
+							{' '}{appCodename}{/if}
 					</h4>
 					<p class="help-text">
 						{@html t('config.credits.madeWith')}

@@ -2,6 +2,7 @@
 	"name": "headsign",
 	"private": true,
 	"version": "1.6.2",
+	"codename": "San Francisco",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
