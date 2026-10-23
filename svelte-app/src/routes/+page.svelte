@@ -1172,7 +1172,11 @@
 			>
 				{#each displayRoutes as route, index (`${route.global_route_id}-${route._splitIndex ?? 0}`)}
 					<div class="route-wrapper" transition:fade={{ duration: 300 }}>
-						<RouteItem {route} showLongName={$config.showRouteLongName} crowdingMap={$config.showCrowding ? $crowdingStore : undefined} />
+						<RouteItem
+							{route}
+							showLongName={$config.showRouteLongName}
+							crowdingMap={$config.showCrowding ? $crowdingStore : undefined}
+						/>
 						{#if route._splitIndex !== undefined && route._totalSplits !== undefined}
 							<div class="route-split-badge">
 								{route._splitIndex + 1}/{route._totalSplits}

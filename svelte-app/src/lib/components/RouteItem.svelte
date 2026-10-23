@@ -9,7 +9,11 @@
 	import { getMinutesUntil } from '#lib/utils/timeUtils.js';
 	import { shouldShowDeparture } from '#lib/utils/departureFilters.js';
 
-	let { route, showLongName = false, crowdingMap }: { route: Route; showLongName?: boolean; crowdingMap?: CrowdingMap } = $props();
+	let {
+		route,
+		showLongName = false,
+		crowdingMap
+	}: { route: Route; showLongName?: boolean; crowdingMap?: CrowdingMap } = $props();
 
 	let useBlackText = $derived(route.route_text_color === '000000');
 	let cellStyle = $derived(`background: #${route.route_color}; color: #${route.route_text_color}`);

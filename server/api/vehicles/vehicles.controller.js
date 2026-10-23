@@ -46,7 +46,10 @@ exports.vehicles = async function (req, res) {
 				const parsed = parseInt(response.headers.get('Retry-After'));
 				const retryAfter = Number.isFinite(parsed) ? parsed : DEFAULT_COOLDOWN / 1000;
 				cooldownUntil = Date.now() + retryAfter * 1000;
-				req.log.warn({ api: 'transit', endpoint: 'vehicles', status: 429, retryAfter }, 'Rate limited');
+				req.log.warn(
+					{ api: 'transit', endpoint: 'vehicles', status: 429, retryAfter },
+					'Rate limited'
+				);
 				res.set({ 'Retry-After': String(retryAfter) });
 				return res.status(429).json({ error: 'Rate limit exceeded', retryAfter });
 			}
