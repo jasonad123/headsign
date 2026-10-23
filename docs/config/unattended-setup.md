@@ -179,6 +179,15 @@ environment:
   UNATTENDED_HEADER_COLOR: '#FF5733'
 ```
 
+### UNATTENDED_HEADER_TEXT_COLOR
+
+Hex color code for header text and icons
+Format: "#RRGGBB" or "#RGB" (e.g., `#000000`)
+
+`UNATTENDED_HEADER_TEXT_COLOUR` is also accepted as an alias for this variable. If both are set to different values, `UNATTENDED_HEADER_TEXT_COLOR` takes precedence and a warning is logged to the server console.
+
+If not set, or if set to an invalid value, black or white is chosen automatically for the best contrast against the header background (a warning is logged to the server console when an invalid value is provided). The same quoting rules as [`UNATTENDED_HEADER_COLOR`](#unattended_header_color) apply.
+
 ### UNATTENDED_CUSTOM_LOGO
 
 URL or local path to your organization's logo.

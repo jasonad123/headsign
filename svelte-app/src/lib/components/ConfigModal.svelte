@@ -3,6 +3,7 @@
 	import { t } from '#lib/i18n/index.js';
 	import { config } from '#lib/stores/config.js';
 	import { formatCoordinatesForDisplay } from '#lib/utils/formatters.js';
+	import { getContrastTextColor } from '#lib/utils/colorUtils.js';
 	import Toggle from '#lib/components/Toggle.svelte';
 	import CollapsibleSection from '#lib/components/CollapsibleSection.svelte';
 	import SolidSection from '#lib/components/SolidSection.svelte';
@@ -496,6 +497,26 @@
 								title={t('config.buttons.resetToDefault')}
 							>
 								{t('config.buttons.reset')}
+							</button>
+						</div>
+					</label>
+
+					<label>
+						{t('config.fields.headerTextColor')}
+						<div style="display: flex; gap: 0.5em; align-items: center;">
+							<input
+								type="color"
+								value={$config.headerTextColor ?? getContrastTextColor($config.headerColor)}
+								oninput={(e) =>
+									config.update((c) => ({ ...c, headerTextColor: e.currentTarget.value }))}
+							/>
+							<button
+								type="button"
+								class="btn-reset"
+								onclick={() => config.update((c) => ({ ...c, headerTextColor: null }))}
+								title={t('config.buttons.resetToDefault')}
+							>
+								{t('config.fields.headerTextColorAuto')}
 							</button>
 						</div>
 					</label>

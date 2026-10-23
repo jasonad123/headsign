@@ -18,6 +18,8 @@
 			"columns": "Rasterspalten",
 			"theme": "Thema",
 			"headerColor": "Kopfzeilenfarbe",
+			"headerTextColor": "Kopfzeilentextfarbe",
+			"headerTextColorAuto": "Automatisch",
 			"showQRCode": "Transit-Deep-Link-QR-Code anzeigen",
 			"customLogo": "Logo-URL",
 			"maxDistance": "Suchradius",
