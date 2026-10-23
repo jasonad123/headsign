@@ -40,7 +40,7 @@ services:
 
   # Frontend builder service
   frontend-builder:
-    image: node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
+    image: node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
     container_name: frontend-builder
     working_dir: /app/svelte-app
     volumes:
@@ -61,7 +61,7 @@ services:
 
   # Backend builder service
   backend-builder:
-    image: node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
+    image: node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
     container_name: backend-builder
     working_dir: /app
     volumes:
@@ -83,7 +83,7 @@ services:
 
   # Development service - Svelte with hot reload
   headsign-dev:
-    image: node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
+    image: node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
     container_name: headsign-dev
     working_dir: /app/svelte-app
     restart: 'no'
@@ -113,7 +113,7 @@ services:
 
   # Backend service for development
   headsign-backend:
-    image: node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
+    image: node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
     container_name: headsign-backend
     working_dir: /app
     restart: 'no'
