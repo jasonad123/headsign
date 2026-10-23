@@ -15,7 +15,9 @@ const TARGETS = [path.join(ROOT, 'package.json'), path.join(ROOT, 'svelte-app', 
 
 function usageError(message) {
 	console.error(message);
-	console.error('Usage: node scripts/bump-version.js <patch|minor|major|x.y.z> [--commit] [--tag] [--push]');
+	console.error(
+		'Usage: node scripts/bump-version.js <patch|minor|major|x.y.z> [--commit] [--tag] [--push]'
+	);
 	process.exit(1);
 }
 
@@ -33,7 +35,8 @@ function nextVersion(current, bump) {
 		if (bump === 'minor') return `${parsed.major}.${parsed.minor + 1}.0`;
 		return `${parsed.major}.${parsed.minor}.${parsed.patch + 1}`;
 	}
-	if (!parseVersion(bump)) usageError(`"${bump}" is not "patch", "minor", "major", or a valid x.y.z version.`);
+	if (!parseVersion(bump))
+		usageError(`"${bump}" is not "patch", "minor", "major", or a valid x.y.z version.`);
 	return bump;
 }
 
@@ -68,7 +71,9 @@ function main() {
 		const raw = fs.readFileSync(file, 'utf8');
 		const json = JSON.parse(raw);
 		if (json.version !== currentVersion) {
-			console.warn(`Warning: ${path.relative(ROOT, file)} was at ${json.version}, expected ${currentVersion}.`);
+			console.warn(
+				`Warning: ${path.relative(ROOT, file)} was at ${json.version}, expected ${currentVersion}.`
+			);
 		}
 		json.version = newVersion;
 		fs.writeFileSync(file, JSON.stringify(json, null, detectIndent(raw)) + '\n');
