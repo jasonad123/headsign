@@ -18,6 +18,8 @@
 			"columns": "Grid columns",
 			"theme": "Theme",
 			"headerColor": "Header colour",
+			"headerTextColor": "Header text colour",
+			"headerTextColorAuto": "Auto",
 			"customLogo": "Custom logo URL",
 			"showQRCode": "Show Transit deeplink QR Code",
 			"maxDistance": "Search radius",

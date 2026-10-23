@@ -18,6 +18,8 @@
 			"columns": "Colonnes de grille",
 			"theme": "Thème",
 			"headerColor": "Couleur d'en-tête",
+			"headerTextColor": "Couleur du texte d'en-tête",
+			"headerTextColorAuto": "Auto",
 			"customLogo": "URL du logo personnalisé",
 			"showQRCode": "Afficher code QR deeplink Transit",
 			"maxDistance": "Rayon de recherche",
