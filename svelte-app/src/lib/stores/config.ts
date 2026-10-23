@@ -29,6 +29,7 @@ export interface Config {
 	filterRedundantTerminus: boolean;
 	showRouteLongName: boolean;
 	viewMode: 'card' | 'board' | 'vertical';
+	showCrowding: boolean;
 	scaleMode: 'auto' | 'manual';
 	autoScaleMinimum: number;
 	manualScale: number;
@@ -60,6 +61,7 @@ const defaultConfig: Config = {
 	filterRedundantTerminus: false,
 	showRouteLongName: false,
 	viewMode: 'card',
+	showCrowding: false,
 	scaleMode: 'manual',
 	autoScaleMinimum: 0.65, // Balances readability with density; allows ~20-25 routes on 1080p display
 	manualScale: 1.0,
