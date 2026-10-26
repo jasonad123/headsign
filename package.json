@@ -1,6 +1,6 @@
 {
 	"name": "headsign-server",
-	"version": "1.6.2",
+	"version": "1.6.3",
 	"codename": "San Francisco",
 	"main": "server/app.js",
 	"dependencies": {
