@@ -90,6 +90,10 @@
 			"vertical": "Vertical",
 			"viewModeHelpText": "Seleccione entre el modo Tarjeta (predeterminado, vista horizontal centrada en rutas), el modo Tablero (tablero horizontal agrupado por parada para visualización cercana) o el modo Vertical (tablero de salidas en retrato agrupado por parada)."
 		},
+		"crowding": {
+			"showCrowding": "Mostrar indicadores de ocupación",
+			"showCrowdingHelpText": "Muestra iconos de ocupación en las salidas en tiempo real (si los proporciona su operador de transporte)"
+		},
 		"scaleMode": {
 			"auto": "Auto",
 			"manual": "Manual",
@@ -154,7 +158,12 @@
 		"moveRouteUp": "Subir",
 		"moveRouteDown": "Bajar",
 		"hideRoute": "Esconder la ruta",
-		"hideStop": "Ocultar parada"
+		"hideStop": "Ocultar parada",
+		"crowding": {
+			"notCrowded": "Ocupación baja",
+			"someCrowding": "Ocupación media",
+			"crowded": "Ocupación alta"
+		}
 	},
 	"stops": {
 		"distance": {

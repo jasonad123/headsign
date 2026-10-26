@@ -250,3 +250,11 @@ Disabled (`UNATTENDED_SHOW_ROUTE_NAMES=false` or `UNATTENDED_SHOW_ROUTE_NAMES=`)
 Options available are _true_ or _false_.
 
 The default is **false** if not set, which will not show the route name.
+
+### UNATTENDED_SHOW_CROWDING (v1.7.0 or greater)
+
+Show a three-person occupancy icon on real-time departures. See [Crowding indicators](crowding.md) for requirements and how it works.
+
+Options available are _true_ or _false_.
+
+The default is **false** if not set, which does not show crowding indicators. Where the transit agency provides no occupancy data, no icon is shown even when enabled.
