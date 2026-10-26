@@ -1,6 +1,7 @@
 {
 	"name": "headsign-server",
 	"version": "1.6.2",
+	"codename": "San Francisco",
 	"main": "server/app.js",
 	"dependencies": {
 		"compression": "^1.8.2",

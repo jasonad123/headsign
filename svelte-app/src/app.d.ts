@@ -3,6 +3,7 @@
 declare global {
 	// Injected by Vite's `define` in vite.config.ts from svelte-app/package.json
 	const __APP_VERSION__: string;
+	const __APP_CODENAME__: string;
 
 	namespace App {
 		// interface Error {}

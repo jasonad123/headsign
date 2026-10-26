@@ -23,6 +23,7 @@ module.exports = function (app) {
 			status: 'healthy',
 			timestamp: new Date().toISOString(),
 			version: packageJson.version,
+			codename: packageJson.codename || '',
 			uptime: process.uptime(),
 			environment: process.env.NODE_ENV || 'development'
 		});
