@@ -18,6 +18,8 @@
 			"columns": "Columnas de cuadrícula",
 			"theme": "Tema",
 			"headerColor": "Color del encabezado",
+			"headerTextColor": "Color del texto del encabezado",
+			"headerTextColorAuto": "Automático",
 			"customLogo": "URL del logotipo personalizado",
 			"showQRCode": "Mostrar código QR deeplink de Transit",
 			"maxDistance": "Radio de búsqueda",

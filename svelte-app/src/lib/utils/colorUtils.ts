@@ -35,3 +35,17 @@ export function getContrastRatio(lum1: number, lum2: number): number {
 	const darker = Math.min(lum1, lum2);
 	return (lighter + 0.05) / (darker + 0.05);
 }
+
+/**
+ * Pick black or white text for a background. Biased toward white (min 2.4:1) so
+ * the default brand green keeps white text; only clearly light colors get black.
+ * @param hex Hex color string (#RGB or #RRGGBB, # optional)
+ * @returns '#000000' or '#ffffff'
+ */
+export function getContrastTextColor(hex: string): '#000000' | '#ffffff' {
+	let h = hex.replace('#', '');
+	if (h.length === 3) h = h.replace(/./g, '$&$&');
+	if (!/^[0-9a-fA-F]{6}$/.test(h)) return '#ffffff';
+	const lum = getRelativeLuminance(h);
+	return getContrastRatio(lum, 1) >= 2.4 ? '#ffffff' : '#000000';
+}
