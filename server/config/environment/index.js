@@ -200,6 +200,36 @@ function validateHeaderColor(color) {
 }
 
 /**
+ * Resolves and validates the header text color env var, supporting both US and
+ * UK spellings (UNATTENDED_HEADER_TEXT_COLOR and UNATTENDED_HEADER_TEXT_COLOUR).
+ * If both are set to different values, UNATTENDED_HEADER_TEXT_COLOR takes precedence.
+ * @returns {string|null} - Valid hex color, or null to auto-select for contrast
+ */
+function resolveHeaderTextColor() {
+	var colorValue = process.env.UNATTENDED_HEADER_TEXT_COLOR;
+	var colourValue = process.env.UNATTENDED_HEADER_TEXT_COLOUR;
+	if (colorValue && colourValue && colorValue !== colourValue) {
+		console.warn(
+			'Both UNATTENDED_HEADER_TEXT_COLOR and UNATTENDED_HEADER_TEXT_COLOUR are set with different values. Using UNATTENDED_HEADER_TEXT_COLOR: ' +
+				colorValue
+		);
+	}
+	var color = colorValue || colourValue;
+	if (!color) {
+		return null;
+	}
+	if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(color)) {
+		return color;
+	}
+	console.warn(
+		'Invalid UNATTENDED_HEADER_TEXT_COLOR/UNATTENDED_HEADER_TEXT_COLOUR value: ' +
+			color +
+			'. Expected a hex color in "#RRGGBB" or "#RGB" format. Using automatic contrast color.'
+	);
+	return null;
+}
+
+/**
  * Validates location format (lat,lng)
  * @param {string} location - The location string to validate
  * @returns {string} - Original location or empty string if invalid
@@ -277,6 +307,7 @@ var all = {
 		language: validateLanguage(process.env.UNATTENDED_LANGUAGE || 'en'),
 		theme: validateTheme(process.env.UNATTENDED_THEME || 'auto'),
 		headerColor: validateHeaderColor(resolveHeaderColorEnv()),
+		headerTextColor: resolveHeaderTextColor(),
 		columns: validateColumns(process.env.UNATTENDED_COLUMNS || 'auto'),
 		viewMode: validateViewMode(process.env.UNATTENDED_VIEW_MODE || 'card'),
 		showQRCode: parseBoolean(process.env.UNATTENDED_SHOW_QR_CODE),

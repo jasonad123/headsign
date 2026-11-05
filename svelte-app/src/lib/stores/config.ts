@@ -22,6 +22,7 @@ export interface Config {
 	columns: 'auto' | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 	theme: 'light' | 'dark' | 'auto';
 	headerColor: string;
+	headerTextColor: string | null;
 	showQRCode: boolean;
 	maxDistance: number;
 	customLogo: string | null;
@@ -53,6 +54,7 @@ const defaultConfig: Config = {
 	columns: 'auto',
 	theme: 'light',
 	headerColor: '#30b566',
+	headerTextColor: null,
 	showQRCode: false,
 	maxDistance: 500,
 	customLogo: null,
