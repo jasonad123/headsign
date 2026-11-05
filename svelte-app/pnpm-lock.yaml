@@ -25,7 +25,7 @@ importers:
         specifier: ^1.9.22
         version: 1.9.22
       i18next:
-        specifier: ^26.4.5
+        specifier: ^26.7.1
         version: 26.7.1(typescript@6.0.3)
       leaflet:
         specifier: ^1.9.4
@@ -35,10 +35,10 @@ importers:
         specifier: ^2.1.3
         version: 2.1.3(svelte@5.57.3)
       '@sveltejs/adapter-node':
-        specifier: ^6.0.0
+        specifier: ^6.0.1
         version: 6.0.1(@sveltejs/kit@3.1.1(@sveltejs/vite-plugin-svelte@7.3.1(svelte@5.57.3)(vite@8.3.5(@types/node@24.19.2)))(svelte@5.57.3)(typescript@6.0.3)(vite@8.3.5(@types/node@24.19.2)))
       '@sveltejs/kit':
-        specifier: ^3.0.0
+        specifier: ^3.1.1
         version: 3.1.1(@sveltejs/vite-plugin-svelte@7.3.1(svelte@5.57.3)(vite@8.3.5(@types/node@24.19.2)))(svelte@5.57.3)(typescript@6.0.3)(vite@8.3.5(@types/node@24.19.2))
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.3.1
@@ -47,19 +47,19 @@ importers:
         specifier: ^24.19.2
         version: 24.19.2
       iconify-icon:
-        specifier: ^3.0.3
+        specifier: ^3.0.5
         version: 3.0.5
       svelte:
-        specifier: ^5.57.2
+        specifier: ^5.57.3
         version: 5.57.3
       svelte-check:
-        specifier: ^4.7.6
+        specifier: ^4.7.8
         version: 4.7.8(picomatch@4.0.7)(svelte@5.57.3)(typescript@6.0.3)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
       vite:
-        specifier: ^8.3.4
+        specifier: ^8.3.5
         version: 8.3.5(@types/node@24.19.2)
 
 packages:
