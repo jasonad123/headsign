@@ -1,0 +1,15 @@
+# OSV-Scanner configuration for svelte-app/pnpm-lock.yaml
+# Applies only to lockfiles in this directory (does not propagate to children).
+# Reference: https://google.github.io/osv-scanner/configuration/
+
+[[IgnoredVulns]]
+# deepmerge mergeObject() prototype poisoning (CVE-2026-93753), no patched release.
+id = "GHSA-gcqx-w48m-w2h4"
+# Re-evaluate on this date in case a patched deepmerge or a vite-plugin-svelte
+# release without deepmerge becomes available.
+effectiveUntil = 2027-05-11
+reason = """\
+Build-time only: pulled in by @sveltejs/vite-plugin-svelte (devDependency), which \
+merges developer-authored Svelte config. No untrusted input reaches deepmerge and it \
+is not included in the production image. Dismissed on Dependabot (alert #97).\
+"""
