@@ -144,7 +144,12 @@ const CACHE_ENABLED = config.parseBoolean(process.env.ENABLE_SERVER_CACHE);
 // Dual-TTL configuration: different cache times for real-time vs schedule data
 const REALTIME_CACHE_TTL = parseInt(process.env.REALTIME_CACHE_TTL) || 5000; // 5s default (free tier safe)
 const STATIC_CACHE_TTL = parseInt(process.env.STATIC_CACHE_TTL) || 120000; // 120s for schedule
-const MAX_CACHE_SIZE = 100; // Bounded cache to prevent memory issues
+const MAX_CACHE_SIZE = 100; // Bounded cache to prevent memory issues (enforced on insert)
+
+// Accepted max_distance range in metres (matches the config UI slider and
+// the UNATTENDED_MAX_DISTANCE allowlist in config/environment)
+const MIN_DISTANCE = 1;
+const MAX_DISTANCE = 1500;
 
 /**
  * Get appropriate Cache-Control max-age based on data freshness
@@ -174,15 +179,8 @@ if (CACHE_ENABLED) {
 				requestCache.delete(key);
 			}
 		}
-		// Enforce max cache size
-		if (requestCache.size > MAX_CACHE_SIZE) {
-			const entriesToDelete = requestCache.size - MAX_CACHE_SIZE;
-			const keys = Array.from(requestCache.keys());
-			for (let i = 0; i < entriesToDelete; i++) {
-				requestCache.delete(keys[i]);
-			}
-		}
-	}, 60000); // Cleanup every 60 seconds
+		// Size is enforced on insert by setCacheEntry()
+	}, 60000); // Cleanup expired entries every 60 seconds
 }
 
 // Export cleanup function for testing and graceful shutdown
@@ -195,33 +193,71 @@ exports.cleanup = function () {
 	pendingRequests.clear();
 };
 
+/**
+ * Insert a cache entry while keeping the cache within MAX_CACHE_SIZE.
+ * Map preserves insertion order, so the first key is the oldest entry.
+ * Re-inserting an existing key moves it to the newest position.
+ * @param {string} key - Cache key
+ * @param {Object} entry - Cache entry ({ data, expiresAt, freshness })
+ */
+function setCacheEntry(key, entry) {
+	requestCache.delete(key);
+	while (requestCache.size >= MAX_CACHE_SIZE) {
+		requestCache.delete(requestCache.keys().next().value);
+	}
+	requestCache.set(key, entry);
+}
+
+/**
+ * Strictly parse a single numeric query parameter.
+ * Rejects arrays (repeated keys), empty strings and any trailing characters,
+ * unlike parseFloat/parseInt which accept a numeric prefix ("40.7&foo=bar" -> 40.7).
+ * @param {*} value - Raw query parameter value
+ * @returns {number} - Parsed number, or NaN if invalid
+ */
+function parseNumericParam(value) {
+	if (typeof value !== 'string' || value.trim() === '') {
+		return NaN;
+	}
+	return Number(value);
+}
+
 // Get list of nearby routes
 exports.nearby = async function (req, res) {
 	const { lat, lon, max_distance } = req.query;
 
 	// Validate required parameters
-	if (!lat || !lon) {
+	if (lat === undefined || lon === undefined) {
 		return res.status(400).json({ error: 'Missing required parameters: lat and lon are required' });
 	}
 
-	// Parse max_distance as integer (query params are strings)
-	// Transit API expects an integer, not a string
-	const distance = max_distance ? parseInt(max_distance, 10) : 1000;
-
-	// Validate that lat and lon are valid numbers
-	if (isNaN(parseFloat(lat)) || isNaN(parseFloat(lon))) {
+	// Validate that lat and lon are single, finite numbers within valid coordinate ranges
+	const latNum = parseNumericParam(lat);
+	const lonNum = parseNumericParam(lon);
+	if (
+		!Number.isFinite(latNum) ||
+		!Number.isFinite(lonNum) ||
+		latNum < -90 ||
+		latNum > 90 ||
+		lonNum < -180 ||
+		lonNum > 180
+	) {
 		return res.status(400).json({ error: 'Invalid parameters: lat and lon must be valid numbers' });
 	}
 
-	// Validate distance is a valid number
-	if (isNaN(distance) || distance < 0) {
-		return res.status(400).json({ error: 'Invalid max_distance parameter' });
+	// Validate max_distance: integer metres within the range the UI and
+	// UNATTENDED_MAX_DISTANCE allow. Transit API expects an integer.
+	const distance = max_distance === undefined ? 1000 : parseNumericParam(max_distance);
+	if (!Number.isInteger(distance) || distance < MIN_DISTANCE || distance > MAX_DISTANCE) {
+		return res.status(400).json({
+			error: `Invalid max_distance parameter: must be an integer between ${MIN_DISTANCE} and ${MAX_DISTANCE}`
+		});
 	}
 
 	// Round coordinates to 4 decimal places (~10.1m precision) for effective cache key grouping
 	// This ensures nearby requests (GPS drift, manual pin drag) share the same cache
-	const roundedLat = parseFloat(lat).toFixed(4);
-	const roundedLon = parseFloat(lon).toFixed(4);
+	const roundedLat = latNum.toFixed(4);
+	const roundedLon = lonNum.toFixed(4);
 
 	// Cache key based on rounded coordinates
 	const cacheKey = `${roundedLat},${roundedLon},${distance}`;
@@ -267,8 +303,15 @@ exports.nearby = async function (req, res) {
 	// Create promise for API request (for in-flight deduplication)
 	const fetchPromise = (async () => {
 		try {
+			// Build query from validated numbers only, never raw user input
+			const upstreamParams = new URLSearchParams({
+				lat: String(latNum),
+				lon: String(lonNum),
+				max_distance: String(distance),
+				max_num_departures: '6'
+			});
 			const response = await fetch(
-				`https://external.transitapp.com/v4/public/nearby_routes?lat=${lat}&lon=${lon}&max_distance=${distance}&max_num_departures=6`,
+				`https://external.transitapp.com/v4/public/nearby_routes?${upstreamParams}`,
 				{
 					headers: {
 						Accept: 'application/json',
@@ -331,8 +374,8 @@ exports.nearby = async function (req, res) {
 						route.itineraries.some((itinerary) => {
 							if (!itinerary.closest_stop) return false;
 							const dist = haversine(
-								parseFloat(lat),
-								parseFloat(lon),
+								latNum,
+								lonNum,
 								itinerary.closest_stop.stop_lat,
 								itinerary.closest_stop.stop_lon
 							);
@@ -351,7 +394,7 @@ exports.nearby = async function (req, res) {
 					isRealTime || hasActiveAlerts(data) ? REALTIME_CACHE_TTL : STATIC_CACHE_TTL;
 				const freshness = isRealTime ? 'fresh-realtime' : 'fresh-schedule';
 
-				requestCache.set(cacheKey, {
+				setCacheEntry(cacheKey, {
 					data,
 					expiresAt: Date.now() + cacheTTL,
 					freshness
